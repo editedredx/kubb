@@ -1,7 +1,7 @@
 import transformers from '@kubb/core/transformers'
 import { FunctionParams, URLPath } from '@kubb/core/utils'
 import { Function, usePlugin, useResolveName } from '@kubb/react'
-import { useOperation, useSchemas } from '@kubb/swagger/hooks'
+import { useOperation, useOperationSchemas } from '@kubb/swagger/hooks'
 import { getASTParams } from '@kubb/swagger/utils'
 
 import type { HttpMethod } from '@kubb/swagger/oas'
@@ -43,15 +43,7 @@ type TemplateProps = {
   dataReturnType: NonNullable<PluginOptions['options']['dataReturnType']>
 }
 
-function Template({
-  name,
-  params,
-  generics,
-  returnType,
-  JSDoc,
-  client,
-  dataReturnType,
-}: TemplateProps): ReactNode {
+function Template({ name, params, generics, returnType, JSDoc, client, dataReturnType }: TemplateProps): ReactNode {
   const clientOptions = [
     `method: "${client.method}"`,
     `url: ${client.path.template}`,
@@ -98,10 +90,13 @@ type Props = {
 
 export function QueryOptions({ factory, dataReturnType, Template = defaultTemplates.default }: Props): ReactNode {
   const { key: pluginKey } = usePlugin()
-  const schemas = useSchemas()
+  const schemas = useOperationSchemas()
   const operation = useOperation()
 
-  const name = useResolveName({ name: `${factory.name}QueryOptions`, pluginKey })
+  const name = useResolveName({
+    name: `${factory.name}QueryOptions`,
+    pluginKey,
+  })
 
   const generics = new FunctionParams()
   const params = new FunctionParams()
@@ -109,9 +104,7 @@ export function QueryOptions({ factory, dataReturnType, Template = defaultTempla
   const clientGenerics = ['TData', `${factory.name}['error']`]
   const resultGenerics = ['TData', `${factory.name}['error']`]
 
-  generics.add([
-    { type: `TData`, default: `${factory.name}['response']` },
-  ])
+  generics.add([{ type: 'TData', default: `${factory.name}['response']` }])
 
   params.add([
     ...getASTParams(schemas.pathParams, { typed: true }),

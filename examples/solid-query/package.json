@@ -28,12 +28,12 @@
     "@kubb/swagger-ts": "workspace:*",
     "@kubb/swagger-zod": "workspace:*",
     "@tanstack/solid-query": "^4.36.1",
-    "axios": "^1.6.7",
-    "solid-js": "^1.8.15",
+    "axios": "^1.6.8",
+    "solid-js": "^1.8.16",
     "tsup": "^8.0.2"
   },
   "devDependencies": {
-    "typescript": "^5.3.3"
+    "typescript": "^5.4.3"
   },
   "packageManager": "pnpm@8.3.0",
   "engines": {

@@ -9,6 +9,7 @@ export default defineConfig([
       index: 'src/index.ts',
       factory: 'src/factory.ts',
     },
+    noExternal: [/lodash.tonumber/],
   },
   {
     ...optionsESM,
@@ -16,5 +17,6 @@ export default defineConfig([
       index: 'src/index.ts',
       factory: 'src/factory.ts',
     },
+    noExternal: [/lodash.tonumber/],
   },
 ])

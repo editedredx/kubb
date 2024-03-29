@@ -7,6 +7,11 @@ export type CreateUser = {
   email?: string
 }
 
+/**
+ * @description OK
+ */
+export type CreateUser201 = CreateUserResult
+
 export type CreateUserMutationRequest = {
   /**
    * @type string
@@ -17,12 +22,8 @@ export type CreateUserMutationRequest = {
 /**
  * @description OK
  */
-export type CreateUser201 = CreateUserResult
-
-/**
- * @description OK
- */
 export type CreateUserMutationResponse = CreateUserResult
+
 export type CreateUserMutation = {
   Response: CreateUserMutationResponse
   Request: CreateUserMutationRequest

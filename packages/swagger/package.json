@@ -1,15 +1,8 @@
 {
   "name": "@kubb/swagger",
-  "version": "2.7.0",
+  "version": "2.11.1",
   "description": "Generator swagger",
-  "keywords": [
-    "typescript",
-    "plugins",
-    "kubb",
-    "codegen",
-    "swagger",
-    "openapi"
-  ],
+  "keywords": ["typescript", "plugins", "kubb", "codegen", "swagger", "openapi"],
   "repository": {
     "type": "git",
     "url": "git://github.com/kubb-project/kubb.git",
@@ -35,6 +28,11 @@
       "require": "./dist/hooks.cjs",
       "default": "./dist/hooks.cjs"
     },
+    "./components": {
+      "import": "./dist/components.js",
+      "require": "./dist/components.cjs",
+      "default": "./dist/components.cjs"
+    },
     "./oas": {
       "import": "./dist/oas.js",
       "require": "./dist/oas.cjs",
@@ -48,23 +46,13 @@
   "types": "./dist/index.d.ts",
   "typesVersions": {
     "*": {
-      "utils": [
-        "./dist/utils.d.ts"
-      ],
-      "hooks": [
-        "./dist/hooks.d.ts"
-      ],
-      "oas": [
-        "./dist/oas.d.ts"
-      ]
+      "utils": ["./dist/utils.d.ts"],
+      "hooks": ["./dist/hooks.d.ts"],
+      "oas": ["./dist/oas.d.ts"],
+      "components": ["./dist/components.d.ts"]
     }
   },
-  "files": [
-    "src",
-    "dist",
-    "!/**/**.test.**",
-    "!/**/__tests__/**"
-  ],
+  "files": ["src", "dist", "!/**/**.test.**", "!/**/__tests__/**"],
   "scripts": {
     "build": "tsup",
     "clean": "npx rimraf ./dist",
@@ -91,11 +79,12 @@
     "@kubb/ts-config": "workspace:*",
     "@kubb/tsup-config": "workspace:*",
     "@types/js-yaml": "^4.0.9",
-    "@types/react": "^18.2.62",
+    "@types/react": "^18.2.73",
     "@types/swagger2openapi": "^7.0.4",
     "eslint": "^8.57.0",
+    "react": "^18.2.0",
     "tsup": "^8.0.2",
-    "typescript": "^5.3.3"
+    "typescript": "^5.4.3"
   },
   "peerDependencies": {
     "@kubb/react": "workspace:*"

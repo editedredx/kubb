@@ -1,6 +1,4 @@
-import type { ApiResponse } from '../../models'
-
-export type UploadFileMutationRequest = string
+import type { ApiResponse } from './ApiResponse'
 
 export type UploadFilePathParams = {
   /**
@@ -10,25 +8,26 @@ export type UploadFilePathParams = {
   petId: number
 }
 
-export type UploadFileQueryParams =
-  | {
-    /**
-     * @description Additional Metadata
-     * @type string | undefined
-     */
-    additionalMetadata?: string
-  }
-  | undefined
+export type UploadFileQueryParams = {
+  /**
+   * @description Additional Metadata
+   * @type string | undefined
+   */
+  additionalMetadata?: string
+}
 
 /**
  * @description successful operation
  */
 export type UploadFile200 = ApiResponse
 
+export type UploadFileMutationRequest = string
+
 /**
  * @description successful operation
  */
 export type UploadFileMutationResponse = ApiResponse
+
 export type UploadFileMutation = {
   Response: UploadFileMutationResponse
   Request: UploadFileMutationRequest

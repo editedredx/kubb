@@ -1,5 +1,127 @@
 # @kubb/swagger-faker
 
+## 2.11.1
+
+### Patch Changes
+
+- [#889](https://github.com/kubb-project/kubb/pull/889) [`83fdc44`](https://github.com/kubb-project/kubb/commit/83fdc4421110eb07c94665d78c7b23642af854d5) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - faker gives wrong string format for date, causes zodios mock failed to parse type properly
+
+- Updated dependencies []:
+  - @kubb/core@2.11.1
+  - @kubb/parser@2.11.1
+  - @kubb/react@2.11.1
+  - @kubb/swagger@2.11.1
+  - @kubb/swagger-ts@2.11.1
+
+## 2.11.0
+
+### Minor Changes
+
+- [#883](https://github.com/kubb-project/kubb/pull/883) [`b97c061`](https://github.com/kubb-project/kubb/commit/b97c0616c231f8aa51e4551e5558573ad43ada98) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - use of unified SchemaGenerator to create schemas for TypeScript, Zod and the Fake Plugin
+
+### Patch Changes
+
+- Updated dependencies [[`b97c061`](https://github.com/kubb-project/kubb/commit/b97c0616c231f8aa51e4551e5558573ad43ada98), [`b97c061`](https://github.com/kubb-project/kubb/commit/b97c0616c231f8aa51e4551e5558573ad43ada98)]:
+  - @kubb/swagger-ts@2.11.0
+  - @kubb/swagger@2.11.0
+  - @kubb/react@2.11.0
+  - @kubb/core@2.11.0
+  - @kubb/parser@2.11.0
+
+## 2.10.0
+
+### Patch Changes
+
+- Updated dependencies [[`a80cc2d`](https://github.com/kubb-project/kubb/commit/a80cc2d2a4f109ff1e814707e5dd104bd730fb64)]:
+  - @kubb/swagger@2.10.0
+  - @kubb/core@2.10.0
+  - @kubb/swagger-ts@2.10.0
+  - @kubb/react@2.10.0
+  - @kubb/parser@2.10.0
+
+## 2.9.1
+
+### Patch Changes
+
+- Updated dependencies [[`6109ffa`](https://github.com/kubb-project/kubb/commit/6109ffa77aa9e6d629eff06850d2fe4bcd62088c)]:
+  - @kubb/core@2.9.1
+  - @kubb/react@2.9.1
+  - @kubb/swagger@2.9.1
+  - @kubb/swagger-ts@2.9.1
+  - @kubb/parser@2.9.1
+
+## 2.9.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @kubb/core@2.9.0
+  - @kubb/parser@2.9.0
+  - @kubb/react@2.9.0
+  - @kubb/swagger@2.9.0
+  - @kubb/swagger-ts@2.9.0
+
+## 2.8.2
+
+### Patch Changes
+
+- Updated dependencies [[`9759907`](https://github.com/kubb-project/kubb/commit/9759907ac07abd69021712666331f34fc8fa33f0)]:
+  - @kubb/parser@2.8.2
+  - @kubb/core@2.8.2
+  - @kubb/react@2.8.2
+  - @kubb/swagger-ts@2.8.2
+  - @kubb/swagger@2.8.2
+
+## 2.8.1
+
+### Patch Changes
+
+- [`e9396d7`](https://github.com/kubb-project/kubb/commit/e9396d76a74fd3992444bbc21f3dedda1ee99ea4) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - use of faker.number.int for type integer
+
+- Updated dependencies []:
+  - @kubb/core@2.8.1
+  - @kubb/parser@2.8.1
+  - @kubb/react@2.8.1
+  - @kubb/swagger@2.8.1
+  - @kubb/swagger-ts@2.8.1
+
+## 2.8.0
+
+### Patch Changes
+
+- [#852](https://github.com/kubb-project/kubb/pull/852) [`752f9a0`](https://github.com/kubb-project/kubb/commit/752f9a02f642f2c5e948b96622fdc73c33d571b8) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - useOperation and useSchema with a component Oas and Oas.Operation
+
+- Updated dependencies [[`752f9a0`](https://github.com/kubb-project/kubb/commit/752f9a02f642f2c5e948b96622fdc73c33d571b8), [`e2eed44`](https://github.com/kubb-project/kubb/commit/e2eed4482e2e49d41c87e64eb484ebedbeb3ccc8)]:
+  - @kubb/swagger-ts@2.8.0
+  - @kubb/swagger@2.8.0
+  - @kubb/react@2.8.0
+  - @kubb/core@2.8.0
+  - @kubb/parser@2.8.0
+
+## 2.7.2
+
+### Patch Changes
+
+- [#848](https://github.com/kubb-project/kubb/pull/848) [`7027af9`](https://github.com/kubb-project/kubb/commit/7027af91c28475c9ab98b16d237fc3fb429962b4) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - correct use of regex for faker
+
+- Updated dependencies [[`5857667`](https://github.com/kubb-project/kubb/commit/5857667ca41cbc8fb983d335691fa8c8047e1f48)]:
+  - @kubb/swagger-ts@2.7.2
+  - @kubb/core@2.7.2
+  - @kubb/parser@2.7.2
+  - @kubb/react@2.7.2
+  - @kubb/swagger@2.7.2
+
+## 2.7.1
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @kubb/core@2.7.1
+  - @kubb/parser@2.7.1
+  - @kubb/react@2.7.1
+  - @kubb/swagger@2.7.1
+  - @kubb/swagger-ts@2.7.1
+
 ## 2.7.0
 
 ### Patch Changes

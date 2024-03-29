@@ -47,9 +47,9 @@ export const definePlugin = createPlugin<PluginOptions>((options) => {
       },
     },
     pre: [swaggerPluginName],
-    resolvePath(baseName, directory, options) {
+    resolvePath(baseName, pathMode, options) {
       const root = path.resolve(this.config.root, this.config.output.path)
-      const mode = FileManager.getMode(path.resolve(root, output.path))
+      const mode = pathMode ?? FileManager.getMode(path.resolve(root, output.path))
 
       if (mode === 'file') {
         /**
@@ -88,18 +88,15 @@ export const definePlugin = createPlugin<PluginOptions>((options) => {
 
       const oas = await swaggerPlugin.api.getOas()
 
-      const operationGenerator = new OperationGenerator(
-        this.plugin.options,
-        {
-          oas,
-          pluginManager: this.pluginManager,
-          plugin: this.plugin,
-          contentType: swaggerPlugin.api.contentType,
-          exclude,
-          include,
-          override,
-        },
-      )
+      const operationGenerator = new OperationGenerator(this.plugin.options, {
+        oas,
+        pluginManager: this.pluginManager,
+        plugin: this.plugin,
+        contentType: swaggerPlugin.api.contentType,
+        exclude,
+        include,
+        override,
+      })
 
       const files = await operationGenerator.build()
 
@@ -126,7 +123,11 @@ export const definePlugin = createPlugin<PluginOptions>((options) => {
         await this.addFile(...rootFiles)
       }
 
-      await this.fileManager.addIndexes({ root, output, meta: { pluginKey: this.plugin.key } })
+      await this.fileManager.addIndexes({
+        root,
+        output,
+        meta: { pluginKey: this.plugin.key },
+      })
     },
   }
 })

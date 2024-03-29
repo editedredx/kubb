@@ -1,5 +1,3 @@
-import React from 'react'
-
 export type { RootType } from './client/index.ts'
 export { createRoot } from './client/index.ts'
 export type { AppContextProps } from './components/index.ts'
@@ -9,6 +7,7 @@ export {
   useApp,
   useFile,
   useFileManager,
+  useGetFile,
   useIndent,
   useLanguage,
   useMeta,
@@ -18,6 +17,6 @@ export {
   useResolveName,
   useResolvePath,
 } from './hooks/index.ts'
+export { createNode } from './shared/dom.ts'
 export type * from './types.ts'
-
-export default React
+export { createContext, useContext } from 'react'

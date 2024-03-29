@@ -8,7 +8,7 @@ import { getGroupedByTagFiles } from '@kubb/swagger/utils'
 import { pluginName as swaggerTsPluginName } from '@kubb/swagger-ts'
 import { pluginName as swaggerZodPluginName } from '@kubb/swagger-zod'
 
-import { Mutation, Query, QueryKey, QueryOptions } from './components/index.ts'
+import { Mutation, Operations, Query, QueryKey, QueryOptions } from './components/index.ts'
 import { OperationGenerator } from './OperationGenerator.tsx'
 
 import type { Plugin } from '@kubb/core'
@@ -27,12 +27,15 @@ export const definePlugin = createPlugin<PluginOptions>((options) => {
     override = [],
     framework = 'react',
     parser,
-    suspense,
+    suspense = {},
     infinite,
     transformers = {},
     dataReturnType = 'data',
+    pathParamsType = 'inline',
+    mutate = {},
+    query = {},
+    queryOptions = {},
     templates,
-    query,
   } = options
   const template = group?.output ? group.output : `${output.path}/{{tag}}Controller`
 
@@ -45,29 +48,45 @@ export const definePlugin = createPlugin<PluginOptions>((options) => {
         ...options.client,
       },
       dataReturnType,
+      pathParamsType,
       infinite: infinite
         ? {
-          queryParam: 'id',
-          initialPageParam: 0,
-          cursorParam: undefined,
-          ...infinite,
-        }
-        : undefined,
+            queryParam: 'id',
+            initialPageParam: 0,
+            cursorParam: undefined,
+            ...infinite,
+          }
+        : false,
       suspense,
-      query,
+      query: query
+        ? {
+            queryKey: (key: unknown[]) => key,
+            methods: ['get'],
+            ...query,
+          }
+        : false,
+      queryOptions,
+      mutate: mutate
+        ? {
+            variablesType: 'hook',
+            methods: ['post', 'put', 'patch', 'delete'],
+            ...mutate,
+          }
+        : false,
       templates: {
         mutation: Mutation.templates,
         query: Query.templates,
         queryOptions: QueryOptions.templates,
         queryKey: QueryKey.templates,
+        operations: Operations.templates,
         ...templates,
       },
       parser,
     },
     pre: [swaggerPluginName, swaggerTsPluginName, parser === 'zod' ? swaggerZodPluginName : undefined].filter(Boolean),
-    resolvePath(baseName, directory, options) {
+    resolvePath(baseName, pathMode, options) {
       const root = path.resolve(this.config.root, this.config.output.path)
-      const mode = FileManager.getMode(path.resolve(root, output.path))
+      const mode = pathMode ?? FileManager.getMode(path.resolve(root, output.path))
 
       if (mode === 'file') {
         /**
@@ -90,11 +109,17 @@ export const definePlugin = createPlugin<PluginOptions>((options) => {
 
       if (type === 'file' || type === 'function') {
         if (framework === 'react' || framework === 'vue') {
-          resolvedName = camelCase(name, { prefix: 'use', isFile: type === 'file' })
+          resolvedName = camelCase(name, {
+            prefix: 'use',
+            isFile: type === 'file',
+          })
         }
 
         if (framework === 'svelte' || framework === 'solid') {
-          resolvedName = camelCase(name, { suffix: 'query', isFile: type === 'file' })
+          resolvedName = camelCase(name, {
+            suffix: 'query',
+            isFile: type === 'file',
+          })
         }
       }
       if (type === 'type') {
@@ -112,21 +137,17 @@ export const definePlugin = createPlugin<PluginOptions>((options) => {
 
       const oas = await swaggerPlugin.api.getOas()
 
-      const operationGenerator = new OperationGenerator(
-        this.plugin.options,
-        {
-          oas,
-          pluginManager: this.pluginManager,
-          plugin: this.plugin,
-          contentType: swaggerPlugin.api.contentType,
-          exclude,
-          include,
-          override,
-        },
-      )
+      const operationGenerator = new OperationGenerator(this.plugin.options, {
+        oas,
+        pluginManager: this.pluginManager,
+        plugin: this.plugin,
+        contentType: swaggerPlugin.api.contentType,
+        exclude,
+        include,
+        override,
+      })
 
       const files = await operationGenerator.build()
-
       await this.addFile(...files)
     },
     async writeFile(source, writePath) {

@@ -8,7 +8,7 @@ import { getGroupedByTagFiles } from '@kubb/swagger/utils'
 import { pluginName as swaggerFakerPluginName } from '@kubb/swagger-faker'
 import { pluginName as swaggerTypeScriptPluginName } from '@kubb/swagger-ts'
 
-import { Handlers, Mock } from './components/index.ts'
+import { Mock, Operations } from './components/index.ts'
 import { OperationGenerator } from './OperationGenerator.tsx'
 
 import type { Plugin } from '@kubb/core'
@@ -26,15 +26,15 @@ export const definePlugin = createPlugin<PluginOptions>((options) => {
     name: pluginName,
     options: {
       templates: {
-        handlers: Handlers.templates,
+        operations: Operations.templates,
         mock: Mock.templates,
         ...templates,
       },
     },
     pre: [swaggerPluginName, swaggerTypeScriptPluginName, swaggerFakerPluginName],
-    resolvePath(baseName, directory, options) {
+    resolvePath(baseName, pathMode, options) {
       const root = path.resolve(this.config.root, this.config.output.path)
-      const mode = FileManager.getMode(path.resolve(root, output.path))
+      const mode = pathMode ?? FileManager.getMode(path.resolve(root, output.path))
 
       if (mode === 'file') {
         /**
@@ -53,7 +53,10 @@ export const definePlugin = createPlugin<PluginOptions>((options) => {
       return path.resolve(root, output.path, baseName)
     },
     resolveName(name, type) {
-      const resolvedName = camelCase(name, { suffix: type ? 'handler' : undefined, isFile: type === 'file' })
+      const resolvedName = camelCase(name, {
+        suffix: type ? 'handler' : undefined,
+        isFile: type === 'file',
+      })
       if (type) {
         return transformers?.name?.(resolvedName, type) || resolvedName
       }
@@ -72,18 +75,15 @@ export const definePlugin = createPlugin<PluginOptions>((options) => {
 
       const oas = await swaggerPlugin.api.getOas()
 
-      const operationGenerator = new OperationGenerator(
-        this.plugin.options,
-        {
-          oas,
-          pluginManager: this.pluginManager,
-          plugin: this.plugin,
-          contentType: swaggerPlugin.api.contentType,
-          exclude,
-          include,
-          override,
-        },
-      )
+      const operationGenerator = new OperationGenerator(this.plugin.options, {
+        oas,
+        pluginManager: this.pluginManager,
+        plugin: this.plugin,
+        contentType: swaggerPlugin.api.contentType,
+        exclude,
+        include,
+        override,
+      })
 
       const files = await operationGenerator.build()
       await this.addFile(...files)
@@ -109,7 +109,11 @@ export const definePlugin = createPlugin<PluginOptions>((options) => {
         await this.addFile(...rootFiles)
       }
 
-      await this.fileManager.addIndexes({ root, output, meta: { pluginKey: this.plugin.key } })
+      await this.fileManager.addIndexes({
+        root,
+        output,
+        meta: { pluginKey: this.plugin.key },
+      })
     },
   }
 })

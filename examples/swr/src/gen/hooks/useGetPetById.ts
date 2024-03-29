@@ -1,7 +1,7 @@
-import useSWR from 'swr'
 import client from '@kubb/swagger-client/client'
+import useSWR from 'swr'
 import type { SWRConfiguration, SWRResponse } from 'swr'
-import type { GetPetByIdQueryResponse, GetPetByIdPathParams, GetPetById400, GetPetById404 } from '../models/GetPetById'
+import type { GetPetById400, GetPetById404, GetPetByIdPathParams, GetPetByIdQueryResponse } from '../models/GetPetById'
 
 type GetPetByIdClient = typeof client<GetPetByIdQueryResponse, GetPetById400 | GetPetById404, never>
 type GetPetById = {
@@ -35,7 +35,8 @@ export function getPetByIdQueryOptions<TData = GetPetById['response']>(
 /**
  * @description Returns a single pet
  * @summary Find pet by ID
- * @link /pet/:petId */
+ * @link /pet/:petId
+ */
 export function useGetPetById<TData = GetPetById['response']>(
   petId: GetPetByIdPathParams['petId'],
   options?: {
@@ -45,7 +46,7 @@ export function useGetPetById<TData = GetPetById['response']>(
   },
 ): SWRResponse<TData, GetPetById['error']> {
   const { query: queryOptions, client: clientOptions = {}, shouldFetch = true } = options ?? {}
-  const url = `/pet/${petId}` as const
+  const url = `/pet/${petId}`
   const query = useSWR<TData, GetPetById['error'], typeof url | null>(shouldFetch ? url : null, {
     ...getPetByIdQueryOptions<TData>(petId, clientOptions),
     ...queryOptions,

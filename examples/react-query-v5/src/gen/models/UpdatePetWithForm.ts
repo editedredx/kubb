@@ -1,10 +1,3 @@
-/**
- * @description Invalid input
- */
-export type UpdatePetWithForm405 = any | null
-
-export type UpdatePetWithFormMutationResponse = any | null
-
 export type UpdatePetWithFormPathParams = {
   /**
    * @description ID of pet that needs to be updated
@@ -24,7 +17,15 @@ export type UpdatePetWithFormQueryParams = {
    * @type string | undefined
    */
   status?: string
-} | undefined
+}
+
+/**
+ * @description Invalid input
+ */
+export type UpdatePetWithForm405 = any
+
+export type UpdatePetWithFormMutationResponse = any
+
 export type UpdatePetWithFormMutation = {
   Response: UpdatePetWithFormMutationResponse
   PathParams: UpdatePetWithFormPathParams

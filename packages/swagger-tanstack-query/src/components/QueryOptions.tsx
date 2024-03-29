@@ -2,7 +2,7 @@ import { PackageManager } from '@kubb/core'
 import transformers from '@kubb/core/transformers'
 import { FunctionParams, URLPath } from '@kubb/core/utils'
 import { Function, usePlugin, useResolveName } from '@kubb/react'
-import { useOperation, useSchemas } from '@kubb/swagger/hooks'
+import { useOperation, useOperationSchemas } from '@kubb/swagger/hooks'
 import { getASTParams, getParams, isRequired } from '@kubb/swagger/utils'
 import { pluginKey as swaggerZodPluginKey } from '@kubb/swagger-zod'
 
@@ -46,23 +46,12 @@ type TemplateProps = {
     withData: boolean
     withHeaders: boolean
   }
-  infinite?: Infinite
+  infinite: Infinite | false
   dataReturnType: NonNullable<PluginOptions['options']['dataReturnType']>
   parser: string | undefined
 }
 
-function Template({
-  name,
-  params,
-  generics,
-  returnType,
-  JSDoc,
-  hook,
-  client,
-  infinite,
-  dataReturnType,
-  parser,
-}: TemplateProps): ReactNode {
+function Template({ name, params, generics, returnType, JSDoc, hook, client, infinite, dataReturnType, parser }: TemplateProps): ReactNode {
   const isV5 = new PackageManager().isValidSync(/@tanstack/, '>=5')
 
   const clientOptions = [
@@ -83,30 +72,26 @@ function Template({
 
   const queryOptions = [
     isV5 && !!infinite ? `initialPageParam: ${infinite.initialPageParam}` : undefined,
-    isV5 && !!infinite && !!infinite.cursorParam
-      ? `getNextPageParam: (lastPage) => lastPage['${infinite.cursorParam}']`
-      : undefined,
-    isV5 && !!infinite && !!infinite.cursorParam
-      ? `getPreviousPageParam: (firstPage) => firstPage['${infinite.cursorParam}']`
-      : undefined,
+    isV5 && !!infinite && !!infinite.cursorParam ? `getNextPageParam: (lastPage) => lastPage['${infinite.cursorParam}']` : undefined,
+    isV5 && !!infinite && !!infinite.cursorParam ? `getPreviousPageParam: (firstPage) => firstPage['${infinite.cursorParam}']` : undefined,
     isV5 && !!infinite && !infinite.cursorParam && dataReturnType === 'full'
-      ? `getNextPageParam: (lastPage, allPages, lastPageParam) => Array.isArray(lastPage.data) && lastPage.data.length === 0 ? undefined : lastPageParam + 1`
+      ? 'getNextPageParam: (lastPage, allPages, lastPageParam) => Array.isArray(lastPage.data) && lastPage.data.length === 0 ? undefined : lastPageParam + 1'
       : undefined,
     isV5 && !!infinite && !infinite.cursorParam && dataReturnType === 'data'
-      ? `getNextPageParam: (lastPage, allPages, lastPageParam) => Array.isArray(lastPage) && lastPage.length === 0 ? undefined : lastPageParam + 1`
+      ? 'getNextPageParam: (lastPage, allPages, lastPageParam) => Array.isArray(lastPage) && lastPage.length === 0 ? undefined : lastPageParam + 1'
       : undefined,
     isV5 && !!infinite && !infinite.cursorParam
-      ? `getPreviousPageParam: (firstPage, allPages, firstPageParam) => firstPageParam <= 1 ? undefined : firstPageParam - 1`
+      ? 'getPreviousPageParam: (firstPage, allPages, firstPageParam) => firstPageParam <= 1 ? undefined : firstPageParam - 1'
       : undefined,
   ].filter(Boolean)
 
   const resolvedClientOptions = `${transformers.createIndent(4)}${clientOptions.join(`,\n${transformers.createIndent(4)}`)}`
   const resolvedQueryOptions = `${transformers.createIndent(4)}${queryOptions.join(`,\n${transformers.createIndent(4)}`)}`
 
-  let returnRes = parser ? `return ${parser}(res.data)` : `return res.data`
+  let returnRes = parser ? `return ${parser}(res.data)` : 'return res.data'
 
   if (dataReturnType === 'full') {
-    returnRes = parser ? `return {...res, data: ${parser}(res.data)}` : `return res`
+    returnRes = parser ? `return {...res, data: ${parser}(res.data)}` : 'return res'
   }
 
   if (infinite) {
@@ -215,49 +200,41 @@ type FrameworkProps = TemplateProps & {
 
 const defaultTemplates = {
   get react() {
-    return function(props: FrameworkProps): ReactNode {
-      return (
-        <Template
-          {...props}
-        />
-      )
+    return function (props: FrameworkProps): ReactNode {
+      return <Template {...props} />
     }
   },
   get solid() {
-    return function(props: FrameworkProps): ReactNode {
-      return (
-        <Template
-          {...props}
-        />
-      )
+    return function (props: FrameworkProps): ReactNode {
+      return <Template {...props} />
     }
   },
   get svelte() {
-    return function(props: FrameworkProps): ReactNode {
-      return (
-        <Template
-          {...props}
-        />
-      )
+    return function (props: FrameworkProps): ReactNode {
+      return <Template {...props} />
     }
   },
   get vue() {
-    return function(
-      { client, context, ...rest }: FrameworkProps,
-    ): ReactNode {
+    return function ({ client, context, ...rest }: FrameworkProps): ReactNode {
       const { factory, queryKey } = context
+      const {
+        options: { pathParamsType },
+      } = usePlugin<PluginOptions>()
 
-      const schemas = useSchemas()
+      const schemas = useOperationSchemas()
       const params = new FunctionParams()
 
       const pathParams = getParams(schemas.pathParams, {
-        override: (item) => ({ ...item, name: item.name ? `ref${transformers.pascalCase(item.name)}` : undefined }),
-      })
-        .toString()
+        override: (item) => ({
+          ...item,
+          name: item.name ? `ref${transformers.pascalCase(item.name)}` : undefined,
+        }),
+      }).toString()
 
       params.add([
         ...getASTParams(schemas.pathParams, {
           typed: true,
+          asObject: pathParamsType === 'object',
           override: (item) => ({
             ...item,
             name: item.name ? `ref${transformers.pascalCase(item.name)}` : undefined,
@@ -278,6 +255,12 @@ const defaultTemplates = {
           required: isRequired(schemas.headerParams?.schema),
         },
         {
+          name: 'refData',
+          type: `MaybeRef<${schemas.request?.name}>`,
+          enabled: client.withData,
+          required: isRequired(schemas.request?.schema),
+        },
+        {
           name: 'options',
           type: `${factory.name}['client']['parameters']`,
           default: '{}',
@@ -292,25 +275,18 @@ const defaultTemplates = {
         .join('\n')
 
       const hook = {
-        queryKey: `${queryKey}(${client.withPathParams ? `${pathParams}, ` : ''}${client.withQueryParams ? ('refParams') : ''})`,
+        queryKey: `${queryKey}(${client.withPathParams ? `${pathParams}, ` : ''}${client.withQueryParams ? 'refParams' : ''})`,
         children: unrefs,
       }
 
-      return (
-        <Template
-          {...rest}
-          params={params.toString()}
-          hook={hook}
-          client={client}
-        />
-      )
+      return <Template {...rest} params={params.toString()} hook={hook} client={client} />
     }
   },
 } as const
 
 type Props = {
-  infinite: Infinite | undefined
-  suspense: Suspense | undefined
+  infinite: Infinite | false
+  suspense: Suspense | false
   factory: {
     name: string
   }
@@ -323,20 +299,32 @@ type Props = {
 }
 
 export function QueryOptions({ factory, infinite, suspense, resultType, dataReturnType, Template = defaultTemplates.react }: Props): ReactNode {
-  const { key: pluginKey, options: { parser } } = usePlugin<PluginOptions>()
-  const schemas = useSchemas()
+  const {
+    key: pluginKey,
+    options: { parser, pathParamsType, queryOptions },
+  } = usePlugin<PluginOptions>()
+
+  if (!queryOptions) {
+    return null
+  }
+
+  const schemas = useOperationSchemas()
   const operation = useOperation()
 
   const queryKey = useResolveName({
     name: [factory.name, infinite ? 'Infinite' : undefined, suspense ? 'Suspense' : undefined, 'QueryKey'].filter(Boolean).join(''),
     pluginKey,
   })
-  const queryOptions = useResolveName({
+  const queryOptionsName = useResolveName({
     name: [factory.name, infinite ? 'Infinite' : undefined, suspense ? 'Suspense' : undefined, 'QueryOptions'].filter(Boolean).join(''),
     pluginKey,
   })
 
-  const zodResponseName = useResolveName({ name: schemas.response.name, pluginKey: swaggerZodPluginKey, type: 'function' })
+  const zodResponseName = useResolveName({
+    name: schemas.response.name,
+    pluginKey: swaggerZodPluginKey,
+    type: 'function',
+  })
 
   const generics = new FunctionParams()
   const params = new FunctionParams()
@@ -357,6 +345,7 @@ export function QueryOptions({ factory, infinite, suspense, resultType, dataRetu
   params.add([
     ...getASTParams(schemas.pathParams, {
       typed: true,
+      asObject: pathParamsType === 'object',
     }),
     {
       name: 'params',
@@ -369,6 +358,12 @@ export function QueryOptions({ factory, infinite, suspense, resultType, dataRetu
       type: `${factory.name}['headerParams']`,
       enabled: !!schemas.headerParams?.name,
       required: isRequired(schemas.headerParams?.schema),
+    },
+    {
+      name: 'data',
+      type: `${factory.name}['request']`,
+      enabled: !!schemas.request?.name,
+      required: isRequired(schemas.request?.schema),
     },
     {
       name: 'options',
@@ -388,12 +383,12 @@ export function QueryOptions({ factory, infinite, suspense, resultType, dataRetu
   }
 
   const hook = {
-    queryKey: `${queryKey}(${client.withPathParams ? `${pathParams}, ` : ''}${client.withQueryParams ? ('params') : ''})`,
+    queryKey: `${queryKey}(${client.withPathParams ? `${pathParams}, ` : ''}${client.withQueryParams ? 'params' : ''})`,
   }
 
   return (
     <Template
-      name={queryOptions}
+      name={queryOptionsName}
       params={params.toString()}
       generics={generics.toString()}
       returnType={`WithRequired<${resultType}<${resultGenerics.join(', ')}>, 'queryKey'>`}

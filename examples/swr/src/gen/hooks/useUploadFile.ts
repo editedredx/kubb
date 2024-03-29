@@ -1,5 +1,5 @@
-import useSWRMutation from 'swr/mutation'
 import client from '@kubb/swagger-client/client'
+import useSWRMutation from 'swr/mutation'
 import type { SWRMutationConfiguration, SWRMutationResponse } from 'swr/mutation'
 import type { UploadFileMutationRequest, UploadFileMutationResponse, UploadFilePathParams, UploadFileQueryParams } from '../models/UploadFile'
 
@@ -19,7 +19,8 @@ type UploadFile = {
 }
 /**
  * @summary uploads an image
- * @link /pet/:petId/uploadImage */
+ * @link /pet/:petId/uploadImage
+ */
 export function useUploadFile(
   petId: UploadFilePathParams['petId'],
   params?: UploadFile['queryParams'],

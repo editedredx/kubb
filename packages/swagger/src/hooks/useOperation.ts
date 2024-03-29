@@ -1,13 +1,22 @@
-import { useApp, useFile, usePlugin, usePluginManager } from '@kubb/react'
+import { useContext, usePlugin } from '@kubb/react'
+
+import { Operation } from '../components/Operation.tsx'
+import { useOperationHelpers } from './useOperationHelpers.ts'
 
 import type { KubbFile, Plugin, ResolveNameParams } from '@kubb/core'
-import type { Operation } from 'oas/operation'
-import type { PluginOptions, ResolvePathOptions } from '../types.ts'
+import type { Operation as OperationType } from '../oas/index.ts'
 
-export function useOperation(): Operation {
-  const { meta } = useApp<PluginOptions['appMeta']>()
+/**
+ * `useOperations` will return the current `Operation`
+ */
+export function useOperation(): OperationType {
+  const { operation } = useContext(Operation.Context)
 
-  return meta.operation
+  if (!operation) {
+    throw new Error('Operation is not defined')
+  }
+
+  return operation
 }
 
 type UseOperationNameProps = {
@@ -15,14 +24,18 @@ type UseOperationNameProps = {
   pluginKey?: Plugin['key']
 }
 
+/**
+ * `useOperationName` will return the name based on the current operation and plugin(when `pluginKey` is not provided).
+ */
 export function useOperationName({ type, ...rest }: UseOperationNameProps): string {
   const plugin = usePlugin()
-  const pluginManager = usePluginManager()
   const operation = useOperation()
+  const { getName } = useOperationHelpers()
 
-  const pluginKey = rest.pluginKey || plugin.key
-
-  return pluginManager.resolveName({ name: operation.getOperationId(), pluginKey, type })
+  return getName(operation, {
+    pluginKey: rest.pluginKey || plugin.key,
+    type,
+  })
 }
 
 type FileMeta = KubbFile.FileMetaBase & {
@@ -31,29 +44,23 @@ type FileMeta = KubbFile.FileMetaBase & {
   tag?: string
 }
 
-type UseOperationFileProps = {
+type UseGetOperationFileProps = {
   extName?: KubbFile.Extname
   pluginKey?: Plugin['key']
 }
 
-export function useOperationFile(props: UseOperationFileProps = {}): KubbFile.File<FileMeta> {
+/**
+ * `useGetOperationFile` will create all the props used for `<File/>` based on the current operation and plugin(when `pluginKey` is not provided)
+ * Internally `useFile` of `@kubb/react` is getting used.
+ */
+export function useGetOperationFile(props: UseGetOperationFileProps = {}): KubbFile.File<FileMeta> {
   const plugin = usePlugin()
   const operation = useOperation()
 
-  const pluginKey = props.pluginKey || plugin.key
-  // needed for the `output.group`
-  const tag = operation?.getTags().at(0)?.name
-  const name = useOperationName({ type: 'file', pluginKey })
-  const extName = props.extName || '.ts'
-  const file = useFile<ResolvePathOptions>({ name, extName, pluginKey, options: { type: 'file', pluginKey, tag } })
+  const { getFile } = useOperationHelpers()
 
-  return {
-    ...file,
-    meta: {
-      ...file.meta,
-      name,
-      pluginKey,
-      tag,
-    },
-  }
+  return getFile(operation, {
+    pluginKey: props.pluginKey || plugin.key,
+    extName: props.extName,
+  })
 }

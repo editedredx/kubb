@@ -1,7 +1,7 @@
-import useSWR from 'swr'
 import client from '@kubb/swagger-client/client'
+import useSWR from 'swr'
 import type { SWRConfiguration, SWRResponse } from 'swr'
-import type { GetOrderByIdQueryResponse, GetOrderByIdPathParams, GetOrderById400, GetOrderById404 } from '../models/GetOrderById'
+import type { GetOrderById400, GetOrderById404, GetOrderByIdPathParams, GetOrderByIdQueryResponse } from '../models/GetOrderById'
 
 type GetOrderByIdClient = typeof client<GetOrderByIdQueryResponse, GetOrderById400 | GetOrderById404, never>
 type GetOrderById = {
@@ -35,7 +35,8 @@ export function getOrderByIdQueryOptions<TData = GetOrderById['response']>(
 /**
  * @description For valid response try integer IDs with value <= 5 or > 10. Other values will generate exceptions.
  * @summary Find purchase order by ID
- * @link /store/order/:orderId */
+ * @link /store/order/:orderId
+ */
 export function useGetOrderById<TData = GetOrderById['response']>(
   orderId: GetOrderByIdPathParams['orderId'],
   options?: {
@@ -45,7 +46,7 @@ export function useGetOrderById<TData = GetOrderById['response']>(
   },
 ): SWRResponse<TData, GetOrderById['error']> {
   const { query: queryOptions, client: clientOptions = {}, shouldFetch = true } = options ?? {}
-  const url = `/store/order/${orderId}` as const
+  const url = `/store/order/${orderId}`
   const query = useSWR<TData, GetOrderById['error'], typeof url | null>(shouldFetch ? url : null, {
     ...getOrderByIdQueryOptions<TData>(orderId, clientOptions),
     ...queryOptions,

@@ -1,5 +1,117 @@
 # @kubb/swagger-zodios
 
+## 2.11.1
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @kubb/core@2.11.1
+  - @kubb/parser@2.11.1
+  - @kubb/react@2.11.1
+  - @kubb/swagger@2.11.1
+  - @kubb/swagger-zod@2.11.1
+
+## 2.11.0
+
+### Patch Changes
+
+- Updated dependencies [[`b97c061`](https://github.com/kubb-project/kubb/commit/b97c0616c231f8aa51e4551e5558573ad43ada98), [`b97c061`](https://github.com/kubb-project/kubb/commit/b97c0616c231f8aa51e4551e5558573ad43ada98)]:
+  - @kubb/swagger-zod@2.11.0
+  - @kubb/swagger@2.11.0
+  - @kubb/react@2.11.0
+  - @kubb/core@2.11.0
+  - @kubb/parser@2.11.0
+
+## 2.10.0
+
+### Patch Changes
+
+- Updated dependencies [[`a80cc2d`](https://github.com/kubb-project/kubb/commit/a80cc2d2a4f109ff1e814707e5dd104bd730fb64), [`a8d632d`](https://github.com/kubb-project/kubb/commit/a8d632dc23c6a6ee5af35aca4eb140a1b6633bbb)]:
+  - @kubb/swagger@2.10.0
+  - @kubb/core@2.10.0
+  - @kubb/swagger-zod@2.10.0
+  - @kubb/react@2.10.0
+  - @kubb/parser@2.10.0
+
+## 2.9.1
+
+### Patch Changes
+
+- Updated dependencies [[`6109ffa`](https://github.com/kubb-project/kubb/commit/6109ffa77aa9e6d629eff06850d2fe4bcd62088c)]:
+  - @kubb/core@2.9.1
+  - @kubb/react@2.9.1
+  - @kubb/swagger@2.9.1
+  - @kubb/swagger-zod@2.9.1
+  - @kubb/parser@2.9.1
+
+## 2.9.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @kubb/core@2.9.0
+  - @kubb/parser@2.9.0
+  - @kubb/react@2.9.0
+  - @kubb/swagger@2.9.0
+  - @kubb/swagger-zod@2.9.0
+
+## 2.8.2
+
+### Patch Changes
+
+- Updated dependencies [[`9759907`](https://github.com/kubb-project/kubb/commit/9759907ac07abd69021712666331f34fc8fa33f0)]:
+  - @kubb/parser@2.8.2
+  - @kubb/core@2.8.2
+  - @kubb/react@2.8.2
+  - @kubb/swagger-zod@2.8.2
+  - @kubb/swagger@2.8.2
+
+## 2.8.1
+
+### Patch Changes
+
+- Updated dependencies [[`0c9d5c4`](https://github.com/kubb-project/kubb/commit/0c9d5c46e0b06fd28009ab18cb39e9a60e7b3258)]:
+  - @kubb/swagger-zod@2.8.1
+  - @kubb/core@2.8.1
+  - @kubb/parser@2.8.1
+  - @kubb/react@2.8.1
+  - @kubb/swagger@2.8.1
+
+## 2.8.0
+
+### Patch Changes
+
+- [#852](https://github.com/kubb-project/kubb/pull/852) [`752f9a0`](https://github.com/kubb-project/kubb/commit/752f9a02f642f2c5e948b96622fdc73c33d571b8) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - useOperation and useSchema with a component Oas and Oas.Operation
+
+- Updated dependencies [[`752f9a0`](https://github.com/kubb-project/kubb/commit/752f9a02f642f2c5e948b96622fdc73c33d571b8), [`752f9a0`](https://github.com/kubb-project/kubb/commit/752f9a02f642f2c5e948b96622fdc73c33d571b8)]:
+  - @kubb/swagger-zod@2.8.0
+  - @kubb/swagger@2.8.0
+  - @kubb/react@2.8.0
+  - @kubb/core@2.8.0
+  - @kubb/parser@2.8.0
+
+## 2.7.2
+
+### Patch Changes
+
+- Updated dependencies [[`5857667`](https://github.com/kubb-project/kubb/commit/5857667ca41cbc8fb983d335691fa8c8047e1f48)]:
+  - @kubb/swagger-zod@2.7.2
+  - @kubb/core@2.7.2
+  - @kubb/parser@2.7.2
+  - @kubb/react@2.7.2
+  - @kubb/swagger@2.7.2
+
+## 2.7.1
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @kubb/core@2.7.1
+  - @kubb/parser@2.7.1
+  - @kubb/react@2.7.1
+  - @kubb/swagger@2.7.1
+  - @kubb/swagger-zod@2.7.1
+
 ## 2.7.0
 
 ### Patch Changes

@@ -1,16 +1,16 @@
-import { loginUserQueryResponseSchema } from '../../../zod/userController/loginUserSchema'
-import client from '../../../../tanstack-query-client.ts'
-import { useQuery, useInfiniteQuery } from '@tanstack/react-query'
-import type { LoginUserQueryResponse, LoginUserQueryParams, LoginUser400 } from '../../../models/ts/userController/LoginUser'
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
 import type {
-  UseBaseQueryOptions,
-  UseQueryResult,
+  InfiniteData,
   QueryKey,
-  WithRequired,
+  UseBaseQueryOptions,
   UseInfiniteQueryOptions,
   UseInfiniteQueryResult,
-  InfiniteData,
+  UseQueryResult,
+  WithRequired,
 } from '@tanstack/react-query'
+import client from '../../../../tanstack-query-client.ts'
+import type { LoginUser400, LoginUserQueryParams, LoginUserQueryResponse } from '../../../models/ts/userController/LoginUser'
+import { loginUserQueryResponseSchema } from '../../../zod/userController/loginUserSchema'
 
 type LoginUserClient = typeof client<LoginUserQueryResponse, LoginUser400, never>
 type LoginUser = {
@@ -38,7 +38,7 @@ export function loginUserQueryOptions<TData = LoginUser['response'], TQueryData 
     queryFn: async () => {
       const res = await client<LoginUser['data'], LoginUser['error']>({
         method: 'get',
-        url: `/user/login`,
+        url: '/user/login',
         params,
         ...options,
       })
@@ -48,7 +48,8 @@ export function loginUserQueryOptions<TData = LoginUser['response'], TQueryData 
 }
 /**
  * @summary Logs user into the system
- * @link /user/login */
+ * @link /user/login
+ */
 export function useLoginUser<TData = LoginUser['response'], TQueryData = LoginUser['response'], TQueryKey extends QueryKey = LoginUserQueryKey>(
   params?: LoginUser['queryParams'],
   options: {
@@ -82,7 +83,7 @@ export function loginUserInfiniteQueryOptions<TData = LoginUser['response'], TQu
     queryFn: async ({ pageParam }) => {
       const res = await client<LoginUser['data'], LoginUser['error']>({
         method: 'get',
-        url: `/user/login`,
+        url: '/user/login',
         ...options,
         params: {
           ...params,
@@ -96,15 +97,19 @@ export function loginUserInfiniteQueryOptions<TData = LoginUser['response'], TQu
 }
 /**
  * @summary Logs user into the system
- * @link /user/login */
+ * @link /user/login
+ */
 export function useLoginUserInfinite<
   TData = InfiniteData<LoginUser['response']>,
   TQueryData = LoginUser['response'],
   TQueryKey extends QueryKey = LoginUserInfiniteQueryKey,
->(params?: LoginUser['queryParams'], options: {
-  query?: Partial<UseInfiniteQueryOptions<LoginUser['response'], LoginUser['error'], TData, TQueryData, TQueryKey>>
-  client?: LoginUser['client']['parameters']
-} = {}): UseInfiniteQueryResult<TData, LoginUser['error']> & {
+>(
+  params?: LoginUser['queryParams'],
+  options: {
+    query?: Partial<UseInfiniteQueryOptions<LoginUser['response'], LoginUser['error'], TData, TQueryData, TQueryKey>>
+    client?: LoginUser['client']['parameters']
+  } = {},
+): UseInfiniteQueryResult<TData, LoginUser['error']> & {
   queryKey: TQueryKey
 } {
   const { query: queryOptions, client: clientOptions = {} } = options ?? {}

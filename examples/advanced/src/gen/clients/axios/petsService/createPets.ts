@@ -1,16 +1,17 @@
 import client from '../../../../axios-client.ts'
 import type { ResponseConfig } from '../../../../axios-client.ts'
 import type {
+  CreatePetsHeaderParams,
   CreatePetsMutationRequest,
   CreatePetsMutationResponse,
   CreatePetsPathParams,
   CreatePetsQueryParams,
-  CreatePetsHeaderParams,
 } from '../../../models/ts/petsController/CreatePets'
 
 /**
  * @summary Create a pet
- * @link /pets/:uuid */
+ * @link /pets/:uuid
+ */
 export async function createPets(
   { uuid }: CreatePetsPathParams,
   data: CreatePetsMutationRequest,

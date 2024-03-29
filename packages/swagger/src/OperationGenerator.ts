@@ -10,7 +10,7 @@ import type { KubbFile, PluginFactoryOptions, PluginManager } from '@kubb/core'
 import type { Plugin } from '@kubb/core'
 import type { HttpMethods as HttpMethod, MediaTypeObject, RequestBodyObject } from 'oas/types'
 import type { Oas, OasTypes, OpenAPIV3, Operation } from './oas/index.ts'
-import type { ContentType, Exclude, Include, OperationSchemas, Override, Paths } from './types.ts'
+import type { ContentType, Exclude, Include, OperationSchemas, OperationsByMethod, Override } from './types.ts'
 
 export type GetOperationGeneratorOptions<T extends OperationGenerator<any, any, any>> = T extends OperationGenerator<infer Options, any, any> ? Options : never
 
@@ -35,6 +35,15 @@ export abstract class OperationGenerator<
   TPluginOptions extends PluginFactoryOptions = PluginFactoryOptions,
   TFileMeta extends KubbFile.FileMetaBase = KubbFile.FileMetaBase,
 > extends Generator<TOptions, Context<TOptions, TPluginOptions>> {
+  #operationsByMethod: OperationsByMethod = {}
+  get operationsByMethod(): OperationsByMethod {
+    return this.#operationsByMethod
+  }
+
+  set operationsByMethod(paths: OperationsByMethod) {
+    this.#operationsByMethod = paths
+  }
+
   #getOptions(operation: Operation, method: HttpMethod): Partial<TOptions> {
     const { override = [] } = this.context
 
@@ -131,10 +140,7 @@ export abstract class OperationGenerator<
     return params.reduce(
       (schema, pathParameters) => {
         const property = pathParameters.content?.[contentType]?.schema ?? (pathParameters.schema as OasTypes.SchemaObject)
-        const required = [...(schema.required || [] as any), pathParameters.required ? pathParameters.name : undefined]
-          .filter(
-            Boolean,
-          )
+        const required = [...(schema.required || ([] as any)), pathParameters.required ? pathParameters.name : undefined].filter(Boolean)
 
         return {
           ...schema,
@@ -175,8 +181,8 @@ export abstract class OperationGenerator<
 
     // check if contentType of content x exists, sometimes requestBody can have contentType x and responses 200 y.
     const responseJSONSchema = schema?.content?.[contentType]
-      ? schema?.content?.[contentType]?.schema as OasTypes.SchemaObject
-      : operation.getResponseAsJSONSchema(statusCode)?.at(0)?.schema as OasTypes.SchemaObject
+      ? (schema?.content?.[contentType]?.schema as OasTypes.SchemaObject)
+      : (operation.getResponseAsJSONSchema(statusCode)?.at(0)?.schema as OasTypes.SchemaObject)
 
     if (isReference(responseJSONSchema)) {
       return {
@@ -219,70 +225,69 @@ export abstract class OperationGenerator<
     const requestSchema = this.#getRequestSchema(operation)
     const responseStatusCode = statusCode || (operation.schema.responses && Object.keys(operation.schema.responses).find((key) => key.startsWith('2'))) || 200
     const responseSchema = this.#getResponseSchema(operation, responseStatusCode)
-    const statusCodes = operation
-      .getResponseStatusCodes()
-      .map((statusCode) => {
-        let name = statusCode
-        if (name === 'default') {
-          name = 'error'
-        }
+    const statusCodes = operation.getResponseStatusCodes().map((statusCode) => {
+      let name = statusCode
+      if (name === 'default') {
+        name = 'error'
+      }
 
-        const schema = this.#getResponseSchema(operation, statusCode)
+      const schema = this.#getResponseSchema(operation, statusCode)
 
-        return {
-          name: transformers.pascalCase(`${operation.getOperationId()} ${name}`),
-          description: (operation.getResponseByStatusCode(statusCode) as OasTypes.ResponseObject)?.description,
-          schema,
-          operation,
-          operationName: transformers.pascalCase(`${operation.getOperationId()}`),
-          statusCode: name === 'error' ? undefined : Number(statusCode),
-          keys: schema?.properties ? Object.keys(schema.properties) : undefined,
-        }
-      })
+      return {
+        name: transformers.pascalCase(`${operation.getOperationId()} ${name}`),
+        description: (operation.getResponseByStatusCode(statusCode) as OasTypes.ResponseObject)?.description,
+        schema,
+        operation,
+        operationName: transformers.pascalCase(`${operation.getOperationId()}`),
+        statusCode: name === 'error' ? undefined : Number(statusCode),
+        keys: schema?.properties ? Object.keys(schema.properties) : undefined,
+      }
+    })
 
     return {
       pathParams: pathParamsSchema
         ? {
-          name: transformers.pascalCase(`${operation.getOperationId()} PathParams`),
-          operation,
-          operationName: transformers.pascalCase(`${operation.getOperationId()}`),
-          schema: pathParamsSchema,
-          keys: pathParamsSchema.properties ? Object.keys(pathParamsSchema.properties) : undefined,
-        }
+            name: transformers.pascalCase(`${operation.getOperationId()} PathParams`),
+            operation,
+            operationName: transformers.pascalCase(`${operation.getOperationId()}`),
+            schema: pathParamsSchema,
+            keys: pathParamsSchema.properties ? Object.keys(pathParamsSchema.properties) : undefined,
+          }
         : undefined,
       queryParams: queryParamsSchema
         ? {
-          name: transformers.pascalCase(`${operation.getOperationId()} QueryParams`),
-          operation,
-          operationName: transformers.pascalCase(`${operation.getOperationId()}`),
-          schema: queryParamsSchema,
-          keys: queryParamsSchema.properties ? Object.keys(queryParamsSchema.properties) : [],
-        }
+            name: transformers.pascalCase(`${operation.getOperationId()} QueryParams`),
+            operation,
+            operationName: transformers.pascalCase(`${operation.getOperationId()}`),
+            schema: queryParamsSchema,
+            keys: queryParamsSchema.properties ? Object.keys(queryParamsSchema.properties) : [],
+          }
         : undefined,
       headerParams: headerParamsSchema
         ? {
-          name: transformers.pascalCase(`${operation.getOperationId()} HeaderParams`),
-          operation,
-          operationName: transformers.pascalCase(`${operation.getOperationId()}`),
-          schema: headerParamsSchema,
-          keys: headerParamsSchema.properties ? Object.keys(headerParamsSchema.properties) : undefined,
-        }
+            name: transformers.pascalCase(`${operation.getOperationId()} HeaderParams`),
+            operation,
+            operationName: transformers.pascalCase(`${operation.getOperationId()}`),
+            schema: headerParamsSchema,
+            keys: headerParamsSchema.properties ? Object.keys(headerParamsSchema.properties) : undefined,
+          }
         : undefined,
       request: requestSchema
         ? {
-          name: transformers.pascalCase(`${operation.getOperationId()} ${operation.method === 'get' ? 'queryRequest' : 'mutationRequest'}`),
-          description: (operation.schema.requestBody as RequestBodyObject)?.description,
-          operation,
-          operationName: transformers.pascalCase(`${operation.getOperationId()}`),
-          schema: requestSchema,
-          keys: requestSchema.properties ? Object.keys(requestSchema.properties) : undefined,
-          keysToOmit: requestSchema.properties
-            ? Object.keys(requestSchema.properties).filter((key) => {
-              const item = requestSchema.properties![key] as OasTypes.SchemaObject
-              return item?.readOnly
-            })
-            : undefined,
-        }
+            name: transformers.pascalCase(`${operation.getOperationId()} ${operation.method === 'get' ? 'queryRequest' : 'mutationRequest'}`),
+            description: (operation.schema.requestBody as RequestBodyObject)?.description,
+            operation,
+            operationName: transformers.pascalCase(`${operation.getOperationId()}`),
+            schema: requestSchema,
+            keys: requestSchema.properties ? Object.keys(requestSchema.properties) : undefined,
+            keysToOmit: requestSchema.properties
+              ? Object.keys(requestSchema.properties).filter((key) => {
+                  const item = requestSchema.properties?.[key] as OasTypes.SchemaObject
+
+                  return item?.readOnly
+                })
+              : undefined,
+          }
         : undefined,
       response: {
         name: transformers.pascalCase(`${operation.getOperationId()} ${operation.method === 'get' ? 'queryResponse' : 'mutationResponse'}`),
@@ -294,12 +299,12 @@ export abstract class OperationGenerator<
         keys: responseSchema?.properties ? Object.keys(responseSchema.properties) : undefined,
         keysToOmit: responseSchema?.properties
           ? Object.keys(responseSchema.properties).filter((key) => {
-            const item = responseSchema.properties![key] as OasTypes.SchemaObject
-            return item?.writeOnly
-          })
+              const item = responseSchema.properties?.[key] as OasTypes.SchemaObject
+              return item?.writeOnly
+            })
           : undefined,
       },
-      errors: statusCodes.filter(item => item.statusCode?.toString().startsWith('4') || item.statusCode?.toString().startsWith('5')),
+      errors: statusCodes.filter((item) => item.statusCode?.toString().startsWith('4') || item.statusCode?.toString().startsWith('5')),
       statusCodes,
     }
   }
@@ -311,15 +316,9 @@ export abstract class OperationGenerator<
       patch: this.patch,
       put: this.put,
       delete: this.delete,
-      head: () => {
-        return null
-      },
-      options: () => {
-        return null
-      },
-      trace: () => {
-        return null
-      },
+      head: undefined,
+      options: undefined,
+      trace: undefined,
     } as const
   }
 
@@ -327,56 +326,62 @@ export abstract class OperationGenerator<
     const { oas } = this.context
 
     const paths = oas.getPaths()
-    const filterdPaths = Object.keys(paths).reduce(
-      (acc, path) => {
-        const methods = Object.keys(paths[path]!) as HttpMethod[]
+    this.operationsByMethod = Object.entries(paths).reduce((acc, [path, method]) => {
+      const methods = Object.keys(method) as HttpMethod[]
 
-        methods.forEach((method) => {
-          const operation = oas.operation(path, method)
-          if (operation && this.#methods[method]) {
-            const isExcluded = this.isExcluded(operation, method)
-            const isIncluded = this.context.include ? this.isIncluded(operation, method) : true
+      methods.forEach((method) => {
+        const operation = oas.operation(path, method)
+        if (operation && this.#methods[method]) {
+          const isExcluded = this.isExcluded(operation, method)
+          const isIncluded = this.context.include ? this.isIncluded(operation, method) : true
 
-            if (isIncluded && !isExcluded) {
-              if (!acc[path]) {
-                acc[path] = {} as Paths['get']
-              }
-              acc[path] = {
-                ...acc[path],
-                [method]: {
-                  operation,
-                  schemas: this.getSchemas(operation),
-                },
-              } as Paths['get']
+          if (isIncluded && !isExcluded) {
+            if (!acc[path]) {
+              acc[path] = {} as OperationsByMethod['get']
             }
+            acc[path] = {
+              ...acc[path],
+              [method]: {
+                operation,
+                schemas: this.getSchemas(operation),
+              },
+            } as OperationsByMethod['get']
           }
+        }
+      })
+
+      return acc
+    }, {} as OperationsByMethod)
+
+    const promises = Object.keys(this.operationsByMethod).reduce((acc, path) => {
+      const methods = this.operationsByMethod[path] ? (Object.keys(this.operationsByMethod[path]!) as HttpMethod[]) : []
+
+      methods.forEach((method) => {
+        const { operation } = this.operationsByMethod[path]?.[method]!
+        const options = this.#getOptions(operation, method)
+        const promiseMethod = this.#methods[method]?.call(this, operation, {
+          ...this.options,
+          ...options,
+        })
+        const promiseOperation = this.operation.call(this, operation, {
+          ...this.options,
+          ...options,
         })
 
-        return acc
-      },
-      {} as Paths,
-    )
+        if (promiseMethod) {
+          acc.push(promiseMethod)
+        }
+        if (promiseOperation) {
+          acc.push(promiseOperation)
+        }
+      })
 
-    const promises = Object.keys(filterdPaths).reduce(
-      (acc, path) => {
-        const methods = Object.keys(filterdPaths[path]!) as HttpMethod[]
+      return acc
+    }, [] as OperationMethodResult<TFileMeta>[])
 
-        methods.forEach((method) => {
-          const { operation, schemas } = filterdPaths[path]![method]
-          const options = this.#getOptions(operation, method)
+    const operations = Object.values(this.operationsByMethod).map((item) => Object.values(item).map((item) => item.operation))
 
-          const promise = this.#methods[method].call(this, operation, schemas, { ...this.options, ...options })
-          if (promise) {
-            acc.push(promise)
-          }
-        })
-
-        return acc
-      },
-      [] as OperationMethodResult<TFileMeta>[],
-    )
-
-    promises.push(this.all(filterdPaths))
+    promises.push(this.all(operations.flat().filter(Boolean), this.operationsByMethod))
 
     const files = await Promise.all(promises)
 
@@ -385,31 +390,36 @@ export abstract class OperationGenerator<
   }
 
   /**
+   * Operation
+   */
+  abstract operation(operation: Operation, options: TOptions): OperationMethodResult<TFileMeta>
+
+  /**
    * GET
    */
-  abstract get(operation: Operation, schemas: OperationSchemas, options: TOptions): OperationMethodResult<TFileMeta>
+  abstract get(operation: Operation, options: TOptions): OperationMethodResult<TFileMeta>
 
   /**
    * POST
    */
-  abstract post(operation: Operation, schemas: OperationSchemas, options: TOptions): OperationMethodResult<TFileMeta>
+  abstract post(operation: Operation, options: TOptions): OperationMethodResult<TFileMeta>
   /**
    * PATCH
    */
-  abstract patch(operation: Operation, schemas: OperationSchemas, options: TOptions): OperationMethodResult<TFileMeta>
+  abstract patch(operation: Operation, options: TOptions): OperationMethodResult<TFileMeta>
 
   /**
    * PUT
    */
-  abstract put(operation: Operation, schemas: OperationSchemas, options: TOptions): OperationMethodResult<TFileMeta>
+  abstract put(operation: Operation, options: TOptions): OperationMethodResult<TFileMeta>
 
   /**
    * DELETE
    */
-  abstract delete(operation: Operation, schemas: OperationSchemas, options: TOptions): OperationMethodResult<TFileMeta>
+  abstract delete(operation: Operation, options: TOptions): OperationMethodResult<TFileMeta>
 
   /**
    * Combination of GET, POST, PATCH, PUT, DELETE
    */
-  abstract all(paths: Paths): OperationMethodResult<TFileMeta>
+  abstract all(operations: Operation[], paths: OperationsByMethod): OperationMethodResult<TFileMeta>
 }

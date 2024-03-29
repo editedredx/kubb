@@ -1,6 +1,4 @@
-import { Component } from 'react'
-
-import { AppContext } from './AppContext.ts'
+import { Component, createContext } from 'react'
 
 import type { Logger } from '@kubb/core/logger'
 import type { KubbNode } from '../types.ts'
@@ -12,7 +10,11 @@ type Props<Meta extends Record<string, unknown> = Record<string, unknown>> = {
   children?: KubbNode
 }
 
-class ErrorBoundary extends Component<{ onError: Props['onError']; logger?: Logger; children: KubbNode }> {
+class ErrorBoundary extends Component<{
+  onError: Props['onError']
+  logger?: Logger
+  children: KubbNode
+}> {
   state = { hasError: false }
 
   static getDerivedStateFromError(_error: Error) {
@@ -22,7 +24,7 @@ class ErrorBoundary extends Component<{ onError: Props['onError']; logger?: Logg
   componentDidCatch(error: Error) {
     if (error) {
       this.props.onError(error)
-      this.props.logger?.emit('error', error.message)
+      this.props.logger?.emit('error', error.message, error)
     }
   }
 
@@ -34,6 +36,14 @@ class ErrorBoundary extends Component<{ onError: Props['onError']; logger?: Logg
   }
 }
 
+export type AppContextProps<Meta extends Record<string, unknown> = Record<string, unknown>> = {
+  meta: Meta
+}
+
+const AppContext = createContext<AppContextProps>({
+  meta: {},
+})
+
 export function App<Meta extends Record<string, unknown> = Record<string, unknown>>({ onError, logger, meta, children }: Props<Meta>): KubbNode {
   return (
     <ErrorBoundary logger={logger} onError={onError}>
@@ -41,3 +51,5 @@ export function App<Meta extends Record<string, unknown> = Record<string, unknow
     </ErrorBoundary>
   )
 }
+
+App.Context = AppContext

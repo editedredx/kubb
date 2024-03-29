@@ -1,13 +1,8 @@
 {
   "name": "@kubb/react",
-  "version": "2.7.0",
+  "version": "2.11.1",
   "description": "Generator react",
-  "keywords": [
-    "typescript",
-    "plugins",
-    "kubb",
-    "codegen"
-  ],
+  "keywords": ["typescript", "plugins", "kubb", "codegen"],
   "repository": {
     "type": "git",
     "url": "git://github.com/kubb-project/kubb.git",
@@ -35,14 +30,14 @@
       "default": "./dist/jsx-runtime.cjs"
     },
     "./client": {
-      "import": "./dist/client/index.js",
-      "require": "./dist/client/index.cjs",
-      "default": "./dist/client/index.cjs"
+      "import": "./dist/client.js",
+      "require": "./dist/client.cjs",
+      "default": "./dist/client.cjs"
     },
     "./server": {
-      "import": "./dist/server/index.js",
-      "require": "./dist/server/index.cjs",
-      "default": "./dist/server/index.cjs"
+      "import": "./dist/server.js",
+      "require": "./dist/server.cjs",
+      "default": "./dist/server.cjs"
     },
     "./*": "./*"
   },
@@ -51,22 +46,11 @@
   "types": "./dist/index.d.ts",
   "typesVersions": {
     "*": {
-      "client": [
-        "./dist/client/index.d.ts"
-      ],
-      "server": [
-        "./dist/server/index.d.ts"
-      ]
+      "client": ["./dist/client.d.ts"],
+      "server": ["./dist/server.d.ts"]
     }
   },
-  "files": [
-    "src",
-    "dist",
-    "*.d.ts",
-    "*.d.cts",
-    "!/**/**.test.**",
-    "!/**/__tests__/**"
-  ],
+  "files": ["src", "dist", "*.d.ts", "*.d.cts", "!/**/**.test.**", "!/**/__tests__/**"],
   "scripts": {
     "build": "tsup",
     "clean": "npx rimraf ./dist",
@@ -86,13 +70,14 @@
     "@kubb/eslint-config": "workspace:*",
     "@kubb/ts-config": "workspace:*",
     "@kubb/tsup-config": "workspace:*",
-    "@types/react": "^18.2.62",
+    "@types/react": "^18.2.73",
     "@types/react-reconciler": "^0.28.8",
     "eslint": "^8.57.0",
+    "prettier": "^3.2.5",
     "react": "^18.2.0",
     "react-reconciler": "^0.29.0",
     "tsup": "^8.0.2",
-    "typescript": "^5.3.3"
+    "typescript": "^5.4.3"
   },
   "packageManager": "pnpm@8.3.0",
   "engines": {

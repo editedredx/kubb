@@ -3,7 +3,7 @@
     "target": "ES2020",
     /* If NOT transpiling with TypeScript: */
     "module": "ES2020",
-    "moduleResolution": "Bundler",
+    "moduleResolution": "node",
     "sourceMap": true,
     "strictNullChecks": true,
     "jsx": "react-jsx",
@@ -17,12 +17,6 @@
     "allowImportingTsExtensions": true,
     "noEmit": true
   },
-  "include": [
-    "./src/**/*"
-  ],
-  "exclude": [
-    "**/node_modules",
-    "**/types/**",
-    "**/mocks/**"
-  ]
+  "include": ["./src/**/*", "./templates/**/*"],
+  "exclude": ["**/node_modules", "**/types/**", "**/mocks/**"]
 }

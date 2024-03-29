@@ -1,5 +1,95 @@
 # @kubb/swagger
 
+## 2.11.1
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @kubb/core@2.11.1
+  - @kubb/react@2.11.1
+
+## 2.11.0
+
+### Minor Changes
+
+- [#883](https://github.com/kubb-project/kubb/pull/883) [`b97c061`](https://github.com/kubb-project/kubb/commit/b97c0616c231f8aa51e4551e5558573ad43ada98) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - use of unified SchemaGenerator to create schemas for TypeScript, Zod and the Fake Plugin
+
+### Patch Changes
+
+- Updated dependencies [[`b97c061`](https://github.com/kubb-project/kubb/commit/b97c0616c231f8aa51e4551e5558573ad43ada98), [`b97c061`](https://github.com/kubb-project/kubb/commit/b97c0616c231f8aa51e4551e5558573ad43ada98)]:
+  - @kubb/react@2.11.0
+  - @kubb/core@2.11.0
+
+## 2.10.0
+
+### Minor Changes
+
+- [#878](https://github.com/kubb-project/kubb/pull/878) [`a80cc2d`](https://github.com/kubb-project/kubb/commit/a80cc2d2a4f109ff1e814707e5dd104bd730fb64) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - support for useQuery for post/put/delete/patch methods
+
+### Patch Changes
+
+- Updated dependencies [[`a80cc2d`](https://github.com/kubb-project/kubb/commit/a80cc2d2a4f109ff1e814707e5dd104bd730fb64)]:
+  - @kubb/core@2.10.0
+  - @kubb/react@2.10.0
+
+## 2.9.1
+
+### Patch Changes
+
+- Updated dependencies [[`6109ffa`](https://github.com/kubb-project/kubb/commit/6109ffa77aa9e6d629eff06850d2fe4bcd62088c)]:
+  - @kubb/core@2.9.1
+  - @kubb/react@2.9.1
+
+## 2.9.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @kubb/core@2.9.0
+  - @kubb/react@2.9.0
+
+## 2.8.2
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @kubb/core@2.8.2
+  - @kubb/react@2.8.2
+
+## 2.8.1
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @kubb/core@2.8.1
+  - @kubb/react@2.8.1
+
+## 2.8.0
+
+### Patch Changes
+
+- [#852](https://github.com/kubb-project/kubb/pull/852) [`752f9a0`](https://github.com/kubb-project/kubb/commit/752f9a02f642f2c5e948b96622fdc73c33d571b8) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - useOperation and useSchema with a component Oas and Oas.Operation
+
+- Updated dependencies [[`752f9a0`](https://github.com/kubb-project/kubb/commit/752f9a02f642f2c5e948b96622fdc73c33d571b8)]:
+  - @kubb/react@2.8.0
+  - @kubb/core@2.8.0
+
+## 2.7.2
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @kubb/core@2.7.2
+  - @kubb/react@2.7.2
+
+## 2.7.1
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @kubb/core@2.7.1
+  - @kubb/react@2.7.1
+
 ## 2.7.0
 
 ### Patch Changes

@@ -6,23 +6,9 @@ import type {
   UpdatePetWithFormQueryParams,
 } from '../models/UpdatePetWithForm'
 
-/**
- * @description Invalid input
- */
-
-export function createUpdatePetWithForm405(override?: NonNullable<Partial<UpdatePetWithForm405>>): NonNullable<UpdatePetWithForm405> {
-  return undefined
-}
-
-export function createUpdatePetWithFormMutationResponse(
-  override?: NonNullable<Partial<UpdatePetWithFormMutationResponse>>,
-): NonNullable<UpdatePetWithFormMutationResponse> {
-  return undefined
-}
-
 export function createUpdatePetWithFormPathParams(override: NonNullable<Partial<UpdatePetWithFormPathParams>> = {}): NonNullable<UpdatePetWithFormPathParams> {
   return {
-    ...{ 'petId': faker.number.float({}) },
+    ...{ petId: faker.number.int() },
     ...override,
   }
 }
@@ -31,7 +17,20 @@ export function createUpdatePetWithFormQueryParams(
   override: NonNullable<Partial<UpdatePetWithFormQueryParams>> = {},
 ): NonNullable<UpdatePetWithFormQueryParams> {
   return {
-    ...{ 'name': faker.commerce.productName(), 'status': faker.string.alpha() },
+    ...{ name: faker.string.alpha(), status: faker.string.alpha() },
     ...override,
   }
+}
+
+/**
+ * @description Invalid input
+ */
+export function createUpdatePetWithForm405(override?: NonNullable<Partial<UpdatePetWithForm405>>): NonNullable<UpdatePetWithForm405> {
+  return undefined
+}
+
+export function createUpdatePetWithFormMutationResponse(
+  override?: NonNullable<Partial<UpdatePetWithFormMutationResponse>>,
+): NonNullable<UpdatePetWithFormMutationResponse> {
+  return undefined
 }

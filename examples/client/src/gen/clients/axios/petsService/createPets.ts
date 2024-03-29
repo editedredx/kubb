@@ -1,16 +1,17 @@
 import client from '@kubb/swagger-client/client'
 import type { ResponseConfig } from '@kubb/swagger-client/client'
 import type {
+  CreatePetsHeaderParams,
   CreatePetsMutationRequest,
   CreatePetsMutationResponse,
   CreatePetsPathParams,
   CreatePetsQueryParams,
-  CreatePetsHeaderParams,
 } from '../../../models/ts/petsController/CreatePets'
 
 /**
  * @summary Create a pet
- * @link /pets/:uuid */
+ * @link /pets/:uuid
+ */
 export async function createPets(
   uuid: CreatePetsPathParams['uuid'],
   data: CreatePetsMutationRequest,

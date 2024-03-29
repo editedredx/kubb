@@ -1,3 +1,10 @@
 export { useOas } from './useOas.ts'
-export { useOperation, useOperationFile, useOperationName } from './useOperation.ts'
-export { useSchemas } from './useSchemas.ts'
+export {
+  useGetOperationFile,
+  useOperation,
+  useOperationName,
+} from './useOperation.ts'
+export { useOperationHelpers } from './useOperationHelpers.ts'
+export { useOperations } from './useOperations.ts'
+export { useOperationSchemas } from './useOperationSchemas.ts'
+export { useSchema } from './useSchema.ts'

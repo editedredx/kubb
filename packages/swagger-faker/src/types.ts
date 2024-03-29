@@ -1,7 +1,6 @@
 import type { KubbFile, Plugin, PluginFactoryOptions, ResolveNameParams } from '@kubb/core'
-import type { AppMeta as SwaggerAppMeta, Exclude, Include, Override, ResolvePathOptions } from '@kubb/swagger'
+import type { Exclude, Include, Override, ResolvePathOptions, Schema } from '@kubb/swagger'
 import type { OasTypes } from '@kubb/swagger/oas'
-import type { FakerMeta } from './fakerParser.ts'
 
 export type Options = {
   output?: {
@@ -80,14 +79,8 @@ export type Options = {
      * TODO TODO add docs
      * @beta
      */
-    schema?: (schema: OasTypes.SchemaObject | undefined, baseName?: string) => FakerMeta[] | undefined
+    schema?: (schema: OasTypes.SchemaObject | undefined, baseName?: string) => Schema[] | undefined
   }
-  /**
-   * Override FakerMapper with extra mappers(that can be overriden by `transformers.schema`)
-   * TODO TODO add docs
-   * @beta
-   */
-  mapper?: Record<string, string>
   /**
    * The use of Seed is intended to allow for consistent values in a test.
    */
@@ -97,7 +90,6 @@ export type Options = {
 type ResolvedOptions = {
   dateType: NonNullable<Options['dateType']>
   unknownType: NonNullable<Options['unknownType']>
-  mapper: NonNullable<Options['mapper']>
   transformers: NonNullable<Options['transformers']>
   seed: NonNullable<Options['seed']> | undefined
 }
@@ -107,9 +99,7 @@ export type FileMeta = {
   tag?: string
 }
 
-type AppMeta = SwaggerAppMeta
-
-export type PluginOptions = PluginFactoryOptions<'swagger-faker', Options, ResolvedOptions, never, ResolvePathOptions, AppMeta>
+export type PluginOptions = PluginFactoryOptions<'swagger-faker', Options, ResolvedOptions, never, ResolvePathOptions>
 
 declare module '@kubb/core' {
   export interface _Register {

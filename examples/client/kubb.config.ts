@@ -1,6 +1,6 @@
 import { defineConfig } from '@kubb/core'
 
-import { templates } from './templates/CustomClientTemplate'
+import * as client from './templates/client/index'
 
 export default defineConfig(async () => {
   await setTimeout(() => {
@@ -16,9 +16,6 @@ export default defineConfig(async () => {
     output: {
       path: './src/gen',
       clean: true,
-    },
-    hooks: {
-      // done: ['npx eslint --fix ./src/gen', 'prettier --write "**/*.{ts,tsx}"', 'pnpm typecheck'],
     },
     plugins: [
       ['@kubb/swagger', { output: false, validate: true }],
@@ -52,7 +49,7 @@ export default defineConfig(async () => {
               pattern: 'user',
               options: {
                 templates: {
-                  client: templates,
+                  client: client.templates,
                 },
               },
             },

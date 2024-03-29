@@ -2,8 +2,10 @@ import { mockedPluginManager } from '@kubb/core/mocks'
 import { camelCase, pascalCase } from '@kubb/core/transformers'
 import { createRootServer } from '@kubb/react/server'
 import { OasManager } from '@kubb/swagger'
+import { Oas } from '@kubb/swagger/components'
 
 import { OperationGenerator } from '../OperationGenerator.tsx'
+import { Mutation } from './Mutation.tsx'
 import { Query } from './Query.tsx'
 import { QueryKey } from './QueryKey.tsx'
 import { QueryOptions } from './QueryOptions.tsx'
@@ -30,27 +32,30 @@ describe('<Mutation/>', async () => {
     return name
   }
 
-  const options: GetOperationGeneratorOptions<OperationGenerator> = {
-    framework: 'react',
-    infinite: undefined,
-    suspense: undefined,
-    dataReturnType: 'data',
-    templates: {
-      query: Query.templates,
-      queryKey: QueryKey.templates,
-      queryOptions: QueryOptions.templates,
-    },
-    client: {
-      importPath: '@kubb/swagger-client/client',
-    },
-    parser: undefined,
-    query: {},
-  }
+  test('pets with veriableType `hook`', async () => {
+    const options: GetOperationGeneratorOptions<OperationGenerator> = {
+      framework: 'react',
+      infinite: false,
+      suspense: false,
+      dataReturnType: 'data',
+      pathParamsType: 'inline',
+      templates: {
+        query: Query.templates,
+        queryKey: QueryKey.templates,
+        queryOptions: QueryOptions.templates,
+        mutation: Mutation.templates,
+      },
+      client: {
+        importPath: '@kubb/swagger-client/client',
+      },
+      parser: undefined,
+      query: false,
+      queryOptions: false,
+      mutate: { variablesType: 'hook', methods: ['post'] },
+    }
 
-  const plugin = { options } as Plugin<PluginOptions>
-  const og = await new OperationGenerator(
-    options,
-    {
+    const plugin = { options } as Plugin<PluginOptions>
+    const og = await new OperationGenerator(options, {
       oas,
       exclude: [],
       include: undefined,
@@ -58,20 +63,78 @@ describe('<Mutation/>', async () => {
       plugin,
       contentType: undefined,
       override: undefined,
-    },
-  )
+    })
 
-  test('pets', async () => {
-    const operation = oas.operation('/pets', 'post')
-    const schemas = og.getSchemas(operation)
-    const context: AppContextProps<PluginOptions['appMeta']> = { meta: { oas, pluginManager: mockedPluginManager, plugin, schemas, operation } }
+    const operation = oas.operation('/pets/{uuid}', 'post')
+    const context: AppContextProps<PluginOptions['appMeta']> = {
+      meta: { pluginManager: mockedPluginManager, plugin },
+    }
 
     const Component = () => {
-      return <Query.File />
+      return (
+        <Oas oas={oas} operations={[operation]} getOperationSchemas={(...props) => og.getSchemas(...props)}>
+          <Oas.Operation operation={operation}>
+            <Mutation.File />
+          </Oas.Operation>
+        </Oas>
+      )
     }
     const root = createRootServer({ logger: mockedPluginManager.logger })
     const output = await root.renderToString(<Component />, context)
 
-    expect(output).toMatchSnapshot()
+    expect(output).toMatchFileSnapshot('./__snapshots__/gen/useCreatePets.ts')
+  })
+
+  test('pets with veriableType `mutate`', async () => {
+    const options: GetOperationGeneratorOptions<OperationGenerator> = {
+      framework: 'react',
+      infinite: false,
+      suspense: false,
+      dataReturnType: 'data',
+      pathParamsType: 'inline',
+      templates: {
+        query: Query.templates,
+        queryKey: QueryKey.templates,
+        queryOptions: QueryOptions.templates,
+        mutation: Mutation.templates,
+      },
+      client: {
+        importPath: '@kubb/swagger-client/client',
+      },
+      parser: undefined,
+      query: false,
+      queryOptions: false,
+      mutate: { variablesType: 'mutate', methods: ['post'] },
+    }
+
+    const plugin = { options } as Plugin<PluginOptions>
+    const og = await new OperationGenerator(options, {
+      oas,
+      exclude: [],
+      include: undefined,
+      pluginManager: mockedPluginManager,
+      plugin,
+      contentType: undefined,
+      override: undefined,
+    })
+
+    const operation = oas.operation('/pets/{uuid}', 'post')
+    const context: AppContextProps<PluginOptions['appMeta']> = {
+      meta: { pluginManager: mockedPluginManager, plugin },
+    }
+
+    const Component = () => {
+      return (
+        <Oas oas={oas} operations={[operation]} getOperationSchemas={(...props) => og.getSchemas(...props)}>
+          <Oas.Operation operation={operation}>
+            <Mutation.File />
+          </Oas.Operation>
+        </Oas>
+      )
+    }
+    const root = createRootServer({ logger: mockedPluginManager.logger })
+    const output = await root.renderToString(<Component />, context)
+
+    expect(output).toMatchFileSnapshot('./__snapshots__/gen/useCreatePetsMutate.ts')
   })
 })

@@ -1,7 +1,7 @@
-import useSWRMutation from 'swr/mutation'
 import client from '@kubb/swagger-client/client'
+import useSWRMutation from 'swr/mutation'
 import type { SWRMutationConfiguration, SWRMutationResponse } from 'swr/mutation'
-import type { PlaceOrderPatchMutationRequest, PlaceOrderPatchMutationResponse, PlaceOrderPatch405 } from '../models/PlaceOrderPatch'
+import type { PlaceOrderPatch405, PlaceOrderPatchMutationRequest, PlaceOrderPatchMutationResponse } from '../models/PlaceOrderPatch'
 
 type PlaceOrderPatchClient = typeof client<PlaceOrderPatchMutationResponse, PlaceOrderPatch405, PlaceOrderPatchMutationRequest>
 type PlaceOrderPatch = {
@@ -20,14 +20,15 @@ type PlaceOrderPatch = {
 /**
  * @description Place a new order in the store with patch
  * @summary Place an order for a pet with patch
- * @link /store/order */
+ * @link /store/order
+ */
 export function usePlaceOrderPatch(options?: {
   mutation?: SWRMutationConfiguration<PlaceOrderPatch['response'], PlaceOrderPatch['error']>
   client?: PlaceOrderPatch['client']['parameters']
   shouldFetch?: boolean
 }): SWRMutationResponse<PlaceOrderPatch['response'], PlaceOrderPatch['error']> {
   const { mutation: mutationOptions, client: clientOptions = {}, shouldFetch = true } = options ?? {}
-  const url = `/store/order` as const
+  const url = '/store/order' as const
   return useSWRMutation<PlaceOrderPatch['response'], PlaceOrderPatch['error'], typeof url | null>(
     shouldFetch ? url : null,
     async (_url, { arg: data }) => {

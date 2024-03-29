@@ -1,7 +1,7 @@
 import useSWR from 'swr'
-import client from '../../../../swr-client.ts'
 import type { SWRConfiguration, SWRResponse } from 'swr'
-import type { GetPetByIdQueryResponse, GetPetByIdPathParams, GetPetById400, GetPetById404 } from '../../../models/ts/petController/GetPetById'
+import client from '../../../../swr-client.ts'
+import type { GetPetById400, GetPetById404, GetPetByIdPathParams, GetPetByIdQueryResponse } from '../../../models/ts/petController/GetPetById'
 
 type GetPetByIdClient = typeof client<GetPetByIdQueryResponse, GetPetById400 | GetPetById404, never>
 type GetPetById = {
@@ -35,14 +35,18 @@ export function getPetByIdQueryOptions<TData = GetPetById['response']>(
 /**
  * @description Returns a single pet
  * @summary Find pet by ID
- * @link /pet/:petId */
-export function useGetPetById<TData = GetPetById['response']>(petId: GetPetByIdPathParams['petId'], options?: {
-  query?: SWRConfiguration<TData, GetPetById['error']>
-  client?: GetPetById['client']['parameters']
-  shouldFetch?: boolean
-}): SWRResponse<TData, GetPetById['error']> {
+ * @link /pet/:petId
+ */
+export function useGetPetById<TData = GetPetById['response']>(
+  petId: GetPetByIdPathParams['petId'],
+  options?: {
+    query?: SWRConfiguration<TData, GetPetById['error']>
+    client?: GetPetById['client']['parameters']
+    shouldFetch?: boolean
+  },
+): SWRResponse<TData, GetPetById['error']> {
   const { query: queryOptions, client: clientOptions = {}, shouldFetch = true } = options ?? {}
-  const url = `/pet/${petId}` as const
+  const url = `/pet/${petId}`
   const query = useSWR<TData, GetPetById['error'], typeof url | null>(shouldFetch ? url : null, {
     ...getPetByIdQueryOptions<TData>(petId, clientOptions),
     ...queryOptions,

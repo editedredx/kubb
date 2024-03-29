@@ -1,9 +1,10 @@
 import { FunctionParams, URLPath } from '@kubb/core/utils'
-import { Function, Type } from '@kubb/react'
-import { useOperation, useSchemas } from '@kubb/swagger/hooks'
+import { Function, Type, usePlugin } from '@kubb/react'
+import { useOperation, useOperationSchemas } from '@kubb/swagger/hooks'
 import { getASTParams, isRequired } from '@kubb/swagger/utils'
 
 import type { ReactNode } from 'react'
+import type { PluginOptions } from '../types'
 
 type TemplateProps = {
   /**
@@ -35,15 +36,7 @@ type TemplateProps = {
   keys?: string
 }
 
-function Template({
-  name,
-  typeName,
-  params,
-  generics,
-  returnType,
-  JSDoc,
-  keys,
-}: TemplateProps): ReactNode {
+function Template({ name, typeName, params, generics, returnType, JSDoc, keys }: TemplateProps): ReactNode {
   return (
     <>
       <Function.Arrow name={name} export generics={generics} params={params} returnType={returnType} singleLine JSDoc={JSDoc}>
@@ -67,39 +60,28 @@ type FrameworkProps = TemplateProps & {
 
 const defaultTemplates = {
   get react() {
-    return function(props: FrameworkProps): ReactNode {
-      return (
-        <Template
-          {...props}
-        />
-      )
+    return function (props: FrameworkProps): ReactNode {
+      return <Template {...props} />
     }
   },
   get solid() {
-    return function(props: FrameworkProps): ReactNode {
-      return (
-        <Template
-          {...props}
-        />
-      )
+    return function (props: FrameworkProps): ReactNode {
+      return <Template {...props} />
     }
   },
   get svelte() {
-    return function(props: FrameworkProps): ReactNode {
-      return (
-        <Template
-          {...props}
-        />
-      )
+    return function (props: FrameworkProps): ReactNode {
+      return <Template {...props} />
     }
   },
   get vue() {
-    return function(
-      { context, ...rest }: FrameworkProps,
-    ): ReactNode {
+    return function ({ context, ...rest }: FrameworkProps): ReactNode {
       const { factory } = context
 
-      const schemas = useSchemas()
+      const {
+        options: { pathParamsType },
+      } = usePlugin<PluginOptions>()
+      const schemas = useOperationSchemas()
       const operation = useOperation()
       const path = new URLPath(operation.path)
       const params = new FunctionParams()
@@ -108,6 +90,7 @@ const defaultTemplates = {
       params.add([
         ...getASTParams(schemas.pathParams, {
           typed: true,
+          asObject: pathParamsType === 'object',
           override: (item) => ({ ...item, type: `MaybeRef<${item.type}>` }),
         }),
         {
@@ -124,7 +107,7 @@ const defaultTemplates = {
           stringify: true,
           replacer: (pathParam) => `unref(${pathParam})`,
         }),
-        withQueryParams ? `...(params ? [params] : [])` : undefined,
+        withQueryParams ? '...(params ? [params] : [])' : undefined,
       ].filter(Boolean)
 
       return <Template {...rest} params={params.toString()} keys={keys.join(', ')} />
@@ -135,7 +118,7 @@ const defaultTemplates = {
 type Props = {
   name: string
   typeName: string
-  keysFn?: (keys: unknown[]) => unknown[]
+  keysFn: (keys: unknown[]) => unknown[]
   factory: {
     name: string
   }
@@ -145,8 +128,11 @@ type Props = {
   Template?: React.ComponentType<FrameworkProps>
 }
 
-export function QueryKey({ name, typeName, factory, keysFn = (keys) => keys, Template = defaultTemplates.react }: Props): ReactNode {
-  const schemas = useSchemas()
+export function QueryKey({ name, typeName, factory, keysFn, Template = defaultTemplates.react }: Props): ReactNode {
+  const {
+    options: { pathParamsType },
+  } = usePlugin<PluginOptions>()
+  const schemas = useOperationSchemas()
   const operation = useOperation()
   const path = new URLPath(operation.path)
   const params = new FunctionParams()
@@ -155,6 +141,7 @@ export function QueryKey({ name, typeName, factory, keysFn = (keys) => keys, Tem
   params.add([
     ...getASTParams(schemas.pathParams, {
       typed: true,
+      asObject: pathParamsType === 'object',
     }),
     {
       name: 'params',
@@ -169,7 +156,7 @@ export function QueryKey({ name, typeName, factory, keysFn = (keys) => keys, Tem
       type: 'path',
       stringify: true,
     }),
-    withQueryParams ? `...(params ? [params] : [])` : undefined,
+    withQueryParams ? '...(params ? [params] : [])' : undefined,
   ].filter(Boolean)
 
   return <Template typeName={typeName} name={name} params={params.toString()} keys={keysFn(keys).join(', ')} context={{ factory }} />

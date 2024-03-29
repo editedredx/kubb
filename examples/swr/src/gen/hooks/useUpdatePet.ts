@@ -1,7 +1,7 @@
-import useSWRMutation from 'swr/mutation'
 import client from '@kubb/swagger-client/client'
+import useSWRMutation from 'swr/mutation'
 import type { SWRMutationConfiguration, SWRMutationResponse } from 'swr/mutation'
-import type { UpdatePetMutationRequest, UpdatePetMutationResponse, UpdatePet400, UpdatePet404, UpdatePet405 } from '../models/UpdatePet'
+import type { UpdatePet400, UpdatePet404, UpdatePet405, UpdatePetMutationRequest, UpdatePetMutationResponse } from '../models/UpdatePet'
 
 type UpdatePetClient = typeof client<UpdatePetMutationResponse, UpdatePet400 | UpdatePet404 | UpdatePet405, UpdatePetMutationRequest>
 type UpdatePet = {
@@ -20,14 +20,15 @@ type UpdatePet = {
 /**
  * @description Update an existing pet by Id
  * @summary Update an existing pet
- * @link /pet */
+ * @link /pet
+ */
 export function useUpdatePet(options?: {
   mutation?: SWRMutationConfiguration<UpdatePet['response'], UpdatePet['error']>
   client?: UpdatePet['client']['parameters']
   shouldFetch?: boolean
 }): SWRMutationResponse<UpdatePet['response'], UpdatePet['error']> {
   const { mutation: mutationOptions, client: clientOptions = {}, shouldFetch = true } = options ?? {}
-  const url = `/pet` as const
+  const url = '/pet' as const
   return useSWRMutation<UpdatePet['response'], UpdatePet['error'], typeof url | null>(
     shouldFetch ? url : null,
     async (_url, { arg: data }) => {

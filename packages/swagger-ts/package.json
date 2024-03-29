@@ -1,15 +1,8 @@
 {
   "name": "@kubb/swagger-ts",
-  "version": "2.7.0",
+  "version": "2.11.1",
   "description": "Generator swagger-ts",
-  "keywords": [
-    "typescript",
-    "plugins",
-    "kubb",
-    "codegen",
-    "swagger",
-    "openapi"
-  ],
+  "keywords": ["typescript", "plugins", "kubb", "codegen", "swagger", "openapi"],
   "repository": {
     "type": "git",
     "url": "git://github.com/kubb-project/kubb.git",
@@ -41,20 +34,11 @@
   "types": "./dist/index.d.ts",
   "typesVersions": {
     "*": {
-      "components": [
-        "./dist/components.d.ts"
-      ],
-      "oas": [
-        "./dist/oas.d.ts"
-      ]
+      "components": ["./dist/components.d.ts"],
+      "oas": ["./dist/oas.d.ts"]
     }
   },
-  "files": [
-    "src",
-    "dist",
-    "!/**/**.test.**",
-    "!/**/__tests__/**"
-  ],
+  "files": ["src", "dist", "!/**/**.test.**", "!/**/__tests__/**"],
   "scripts": {
     "build": "tsup",
     "clean": "npx rimraf ./dist",
@@ -73,16 +57,17 @@
     "@kubb/swagger": "workspace:*",
     "@kubb/types": "workspace:*",
     "hotscript": "^1.0.13",
-    "json-schema-to-ts": "^3.0.0",
+    "json-schema-to-ts": "^3.0.1",
     "ts-toolbelt": "^9.6.0"
   },
   "devDependencies": {
     "@kubb/eslint-config": "workspace:*",
     "@kubb/ts-config": "workspace:*",
     "@kubb/tsup-config": "workspace:*",
-    "@types/react": "^18.2.62",
+    "@types/react": "^18.2.73",
+    "prettier": "^3.2.5",
     "eslint": "^8.57.0",
-    "expect-type": "^0.17.3",
+    "expect-type": "^0.19.0",
     "react": "^18.2.0",
     "tsup": "^8.0.2"
   },

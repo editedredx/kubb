@@ -1,14 +1,4 @@
-import type { Pet } from '../../models'
-
-/**
- * @description Invalid ID supplied
- */
-export type GetPetById400 = any | null
-
-/**
- * @description Pet not found
- */
-export type GetPetById404 = any | null
+import type { Pet } from './Pet'
 
 export type GetPetByIdPathParams = {
   /**
@@ -24,9 +14,20 @@ export type GetPetByIdPathParams = {
 export type GetPetById200 = Pet
 
 /**
+ * @description Invalid ID supplied
+ */
+export type GetPetById400 = any
+
+/**
+ * @description Pet not found
+ */
+export type GetPetById404 = any
+
+/**
  * @description successful operation
  */
 export type GetPetByIdQueryResponse = Pet
+
 export type GetPetByIdQuery = {
   Response: GetPetByIdQueryResponse
   PathParams: GetPetByIdPathParams

@@ -46,6 +46,24 @@ function Component() {
 
 :::
 
+## useOperations
+
+`useOperations` will return all the Operations.<br/>
+
+::: code-group
+
+```typescript
+import { useOperations } from '@kubb/react'
+
+function Component() {
+  const operations = useOperations()
+
+  return null
+}
+```
+
+:::
+
 ## useSchemas
 
 `useSchemas` will return the schemas of the current `Operation`.<br/>
@@ -57,6 +75,24 @@ import { useSchemas } from '@kubb/react'
 
 function Component() {
   const schemas = useSchemas()
+
+  return null
+}
+```
+
+:::
+
+## useOperationHelpers
+
+`useOperationHelpers` will return some helper functions that can be used to get the operation file, get the operation name.<br/>
+
+::: code-group
+
+```typescript
+import { useOperationHelpers } from '@kubb/react'
+
+function Component() {
+  const { getName, getFile } = useOperationHelpers()
 
   return null
 }
@@ -85,9 +121,9 @@ function Component() {
 
 :::
 
-## useOperationFile
+## useGetOperationFile
 
-`useOperationFile` will create all the props used for `<File/>` based on the current operation and plugin(when `pluginKey` is not provided)<br/>
+`useGetOperationFile` will create all the props used for `<File/>` based on the current operation and plugin(when `pluginKey` is not provided)<br/>
 
 ::: tip
 Internally `useFile` of `@kubb/react` is getting used.
@@ -96,10 +132,10 @@ Internally `useFile` of `@kubb/react` is getting used.
 ::: code-group
 
 ```typescript
-import { File, useOperationFile } from '@kubb/react'
+import { File, useGetOperationFile } from '@kubb/react'
 
 function Component() {
-  const file = useOperationFile({
+  const file = useGetOperationFile({
     pluginKey: ['custom-plugin'], // optional
   })
 

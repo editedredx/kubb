@@ -1,7 +1,7 @@
-import useSWR from 'swr'
 import client from '@kubb/swagger-client/client'
+import useSWR from 'swr'
 import type { SWRConfiguration, SWRResponse } from 'swr'
-import type { GetUserByNameQueryResponse, GetUserByNamePathParams, GetUserByName400, GetUserByName404 } from '../models/GetUserByName'
+import type { GetUserByName400, GetUserByName404, GetUserByNamePathParams, GetUserByNameQueryResponse } from '../models/GetUserByName'
 
 type GetUserByNameClient = typeof client<GetUserByNameQueryResponse, GetUserByName400 | GetUserByName404, never>
 type GetUserByName = {
@@ -34,7 +34,8 @@ export function getUserByNameQueryOptions<TData = GetUserByName['response']>(
 }
 /**
  * @summary Get user by user name
- * @link /user/:username */
+ * @link /user/:username
+ */
 export function useGetUserByName<TData = GetUserByName['response']>(
   username: GetUserByNamePathParams['username'],
   options?: {
@@ -44,7 +45,7 @@ export function useGetUserByName<TData = GetUserByName['response']>(
   },
 ): SWRResponse<TData, GetUserByName['error']> {
   const { query: queryOptions, client: clientOptions = {}, shouldFetch = true } = options ?? {}
-  const url = `/user/${username}` as const
+  const url = `/user/${username}`
   const query = useSWR<TData, GetUserByName['error'], typeof url | null>(shouldFetch ? url : null, {
     ...getUserByNameQueryOptions<TData>(username, clientOptions),
     ...queryOptions,

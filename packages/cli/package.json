@@ -1,14 +1,8 @@
 {
   "name": "@kubb/cli",
-  "version": "2.7.0",
+  "version": "2.11.1",
   "description": "Generator cli",
-  "keywords": [
-    "typescript",
-    "plugins",
-    "kubb",
-    "codegen",
-    "cli"
-  ],
+  "keywords": ["typescript", "plugins", "kubb", "codegen", "cli"],
   "repository": {
     "type": "git",
     "url": "git://github.com/kubb-project/kubb.git",
@@ -29,15 +23,9 @@
     }
   },
   "bin": {
-    "kubb": "bin/kubb.js"
+    "kubb": "bin/kubb.cjs"
   },
-  "files": [
-    "src",
-    "dist",
-    "bin",
-    "!/**/**.test.**",
-    "!/**/__tests__/**"
-  ],
+  "files": ["src", "dist", "bin", "!/**/**.test.**", "!/**/__tests__/**"],
   "scripts": {
     "build": "tsup",
     "clean": "npx rimraf ./dist",
@@ -55,7 +43,7 @@
     "cac": "^6.7.14",
     "chokidar": "^3.6.0",
     "cosmiconfig": "^9.0.0",
-    "esbuild": "^0.19.12",
+    "esbuild": "^0.20.2",
     "execa": "^8.0.1",
     "ora": "^8.0.1",
     "pretty-error": "^4.0.0",
@@ -66,10 +54,10 @@
     "@kubb/swagger": "workspace:*",
     "@kubb/ts-config": "workspace:*",
     "@kubb/tsup-config": "workspace:*",
-    "@types/node": "^20.11.24",
+    "@types/node": "^20.11.30",
     "source-map-support": "^0.5.21",
     "tsup": "^8.0.2",
-    "typescript": "^5.3.3"
+    "typescript": "^5.4.3"
   },
   "packageManager": "pnpm@8.3.0",
   "engines": {

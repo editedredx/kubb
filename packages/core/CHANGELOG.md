@@ -1,5 +1,93 @@
 # @kubb/core
 
+## 2.11.1
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @kubb/parser@2.11.1
+  - @kubb/types@2.11.1
+
+## 2.11.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @kubb/parser@2.11.0
+  - @kubb/types@2.11.0
+
+## 2.10.0
+
+### Minor Changes
+
+- [#878](https://github.com/kubb-project/kubb/pull/878) [`a80cc2d`](https://github.com/kubb-project/kubb/commit/a80cc2d2a4f109ff1e814707e5dd104bd730fb64) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - support for useQuery for post/put/delete/patch methods
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @kubb/parser@2.10.0
+  - @kubb/types@2.10.0
+
+## 2.9.1
+
+### Patch Changes
+
+- [`6109ffa`](https://github.com/kubb-project/kubb/commit/6109ffa77aa9e6d629eff06850d2fe4bcd62088c) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - update packages
+
+- Updated dependencies []:
+  - @kubb/parser@2.9.1
+  - @kubb/types@2.9.1
+
+## 2.9.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @kubb/parser@2.9.0
+  - @kubb/types@2.9.0
+
+## 2.8.2
+
+### Patch Changes
+
+- Updated dependencies [[`9759907`](https://github.com/kubb-project/kubb/commit/9759907ac07abd69021712666331f34fc8fa33f0)]:
+  - @kubb/parser@2.8.2
+  - @kubb/types@2.8.2
+
+## 2.8.1
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @kubb/parser@2.8.1
+  - @kubb/types@2.8.1
+
+## 2.8.0
+
+### Patch Changes
+
+- [#852](https://github.com/kubb-project/kubb/pull/852) [`752f9a0`](https://github.com/kubb-project/kubb/commit/752f9a02f642f2c5e948b96622fdc73c33d571b8) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - useOperation and useSchema with a component Oas and Oas.Operation
+
+- Updated dependencies []:
+  - @kubb/parser@2.8.0
+  - @kubb/types@2.8.0
+
+## 2.7.2
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @kubb/parser@2.7.2
+  - @kubb/types@2.7.2
+
+## 2.7.1
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @kubb/parser@2.7.1
+  - @kubb/types@2.7.1
+
 ## 2.7.0
 
 ### Patch Changes
